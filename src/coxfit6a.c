@@ -98,7 +98,7 @@
 #include "coxfit6.h"
 
 /* the next line is just so that I can use "c6.n" instead of "coxfit6.n", etc*/
-/*#define c6 coxfit6 */
+static struct coxfit6 c6;
 
 static double **bmatrix(int nblock, int *bsize, int rcol,
 			int nfrail, int size);

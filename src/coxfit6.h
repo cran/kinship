@@ -12,7 +12,7 @@
 
 #ifndef COXFIT6_H
 #define COXFIT6_H
-struct {
+struct coxfit6 {
     double eps;         /* convergence criteria */
     double tolerch;     /* tolerance for the cholesky routines */
     double *stop;       /* vector of death times */
@@ -57,5 +57,5 @@ struct {
     int    nfx;         /* number of columns in fx, usually = 1 */
     int    method;      /* 0= Breslow, 1=Efron */
     int    calc2;       /* 0=usual, 1=alternate summation for sparse terms */
-    } c6, coxfit6;
+    } ;
 #endif

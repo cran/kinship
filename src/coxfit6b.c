@@ -23,7 +23,7 @@
 #include "kinproto.h"
 
 /* the next line is just so that I can use "c6.n" instead of "coxfit6.n", etc*/
-/*#define c6 coxfit6  */
+static struct coxfit6 c6;
 static void update(int j, int upper);
 static double dsum1, dsum2;
 static int nvar3;
