@@ -401,3 +401,5 @@ static double **bmatrix(int nblock, int *bsize, int rcol,
 
     return(pointer);
     }
+
+#undef c6

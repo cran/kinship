@@ -1,0 +1,61 @@
+useDynLib(kinship)
+import(lattice,methods,nlme,survival)
+export (
+       "align.pedigree",
+       "alignped1",
+       "alignped2",
+       "alignped3",
+       "alignped4",
+       "autohint",
+       "bdsBlock",
+       "bdsI",
+       "bdsmatrix",
+       "bdsmatrix.ibd",
+       "bdsmatrix.reconcile",
+       "besthint",
+       "coxme",
+       "coxme.control",
+       "coxme.fit",
+       "coxme.varcheck",
+       "familycheck",
+       "gchol",
+       "getCovariateFormula2",
+       "getCrossedTerms",
+       "getGroupsFormula2",
+       "kindepth",
+       "kinship",
+       "lmekin",
+       "makefamid",
+       "makekinship",
+       "pedigree",
+       "strata2"
+       )
+S3method(as.matrix,bdsmatrix)
+S3method(as.matrix,gchol.bdsmatrix)
+S3method(is.list,bdsmatrix)
+S3method(is.list,gchol.bdsmatrix)
+S3method(is.matrix,bdsmatrix)
+S3method(is.matrix,gchol.bdsmatrix)
+S3method(is,bdsmatrix)
+S3method(is,gchol.bdsmatrix)
+S3method(plot,pedigree)
+S3method(print,coxme)
+S3method(print,lmekin)
+S3method(solve,bdsmatrix)
+S3method(solve,gchol)
+S3method(solve,gchol.bdsmatrix)
+exportClasses(
+             "bdsmatrix",
+             "gchol",
+             "gchol.bdsmatrix"
+             )
+
+exportMethods(
+             "%*%",
+             "diag",
+             "diag<-",
+             "gchol",
+             "Math","Math2","Ops","Summary",
+             "show",
+             "unique"
+             )

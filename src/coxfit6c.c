@@ -97,3 +97,5 @@ void coxfit6c(double *u,      double *imatb,
 	Free(c6.bsize);
 	}
     }
+
+#undef c6

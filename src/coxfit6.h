@@ -10,6 +10,8 @@
 **   call is faster than passing everything in from Splus each time.
 */
 
+#ifndef COXFIT6_H
+#define COXFIT6_H
 struct {
     double eps;         /* convergence criteria */
     double tolerch;     /* tolerance for the cholesky routines */
@@ -56,4 +58,4 @@ struct {
     int    method;      /* 0= Breslow, 1=Efron */
     int    calc2;       /* 0=usual, 1=alternate summation for sparse terms */
     } coxfit6;
-
+#endif

@@ -1,1 +1,4 @@
-require("methods", character = TRUE, quietly = TRUE)
+.onLoad <- function(lib, pkg)
+{
+    require("methods", quietly = TRUE)
+}

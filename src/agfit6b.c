@@ -546,3 +546,5 @@ static void update(int j, int upper) {
     for (k=j; k<c6.bstop[j]; k++) c6.dlag2[j][k] = dsum2;
     for (k=c6.nsparse; k<nvar3; k++)   c6.dlag2[k][j]=c6.dsum3[k-c6.nsparse];
     }
+
+#undef c6

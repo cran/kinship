@@ -22,6 +22,9 @@
 02/09/2004 document is.*.*
 03/09/2004 replace sys.parent() with parent.frame() in coxme/lmekin; uncomment !is.matrix in coxme.fit
 20/12/2004 LazyLoad, LazyData
+30/12/2004 add #undef c6 to coxfit6a, coxfit6b, coxfit6c
+01/01/2005 success with NAMESPACE and kinship-internal.Rd is now defunct
+16/01/2005 refine NAMESPACE
 
 1. documented or obvious
 
