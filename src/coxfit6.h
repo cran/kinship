@@ -57,5 +57,5 @@ struct {
     int    nfx;         /* number of columns in fx, usually = 1 */
     int    method;      /* 0= Breslow, 1=Efron */
     int    calc2;       /* 0=usual, 1=alternate summation for sparse terms */
-    } coxfit6;
+    } c6, coxfit6;
 #endif

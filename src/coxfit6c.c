@@ -16,7 +16,7 @@
 #include "kinproto.h"
 
 /* the next line is just so that I can use "c6.n" instead of "coxfit6.n", etc*/
-#define c6 coxfit6  
+/*#define c6 coxfit6  */
 
 void coxfit6c(double *u,      double *imatb,
 	      double *imatr, double *hinvb, double *hinvr,
@@ -97,5 +97,3 @@ void coxfit6c(double *u,      double *imatb,
 	Free(c6.bsize);
 	}
     }
-
-#undef c6

@@ -25,6 +25,8 @@
 30/12/2004 add #undef c6 to coxfit6a, coxfit6b, coxfit6c
 01/01/2005 success with NAMESPACE and kinship-internal.Rd is now defunct
 16/01/2005 refine NAMESPACE
+07/03/2005 add c6 to coxfit6.h
+21/03/2005 move tests into inst
 
 1. documented or obvious
 
