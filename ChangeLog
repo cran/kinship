@@ -1,0 +1,57 @@
+06/03/2004 first pass
+11/03/2004 chol, bdsmatrix, bdsI, familycheck, makefamid, makekinship working
+12/03/2004 bdsmatrix.ibd,solve.gchol,solve.bdsmatrix working
+14/03/2004 gchol(), solve(gchol.bdsmatrix) working
+15/03/2004 debug coxme.fit
+16/03/2004 place %*% in UseMethod working but overwrites system's
+18/03/2004 use '%*%.default' to get around the problem of overwritting system '%*%'
+19/03/2004 plot.pedigree working
+21/03/2004 inform changes to Terry Therneau
+23/03/2004 separate dmatrix/chsolve2 from bdsS.h
+26/03/2004 force bdsmatrix to be a matrix but not a list, customize as.vector(bdsmatrix)
+27/03/2004 gchol now gives gchol.bdsmatrix class if argument is bdsmatrix
+28/03/2004 R CMD check kinship!
+31/03/2004 confusion with full=T in solve.gchol, solve.bdsmatrix remains
+06/04/2004 the use of get("%*%",pos=NULL,mode="function")(x,y) makes complaints gone
+11/07/2004 fix problem in lmekin due to optim
+25/07/2004 further fix on optim in coxme.fit, so no more complaints
+25/08/2004 add keywords as required by R 2.x
+27/08/2004 add version switch for R 2.x as required by setClassUnion("list or NULL",c())
+
+1. documented or obvious
+
+.h                      <- Sint and other changes
+nlminb                  <- optim
+.C()                    <- add PACKAGE = "kinship" as required by R 1.9.0
+.First.Lib              <- add nlme, survival, methods
+significant:            kinship.so and kinship/R/kinship directly debugged
+
+2. sequence of statements
+
+BDSmatrix.R             <- bdsmatrix.R
+BDSmatrix_%_%.R         <- %_%.bdsmatrix.R
+
+3. amend disturbing statements
+
+UseMethod               <- add setGeneric
+list or NULL            <- setClassUnion          
+unique                  <- add 'missing' to 'bdsmatrix'
+setMethod('diag',       <- add nrow=1,ncol=1
+setMethod('['           <- add i, j
+gchol.bdsmatrix.R       <- omit ... in setMethod('dim') and setMethod('show'
+
+thus ... in the function arguments are dropped
+
+
+4. other changes
+
+assign                  <- pos = 0
+nDotArgs                <- length(list(...)
+object                  <- from in places
+diag                    <- setMethod("diag", "diag<-"
+coxme.fit               <- valist[[i]], comment on !is.matrix
+gchol                   <- as.matrix()
+solve.gchol.bdsmatrix   <- temp@ <--> $
+par()$"1em"[2]          <- par()$"cin"[2]/7
+plot.pedigree           <- comment on segments at 118,119,124
+align.pedigree          <- modify remove()
