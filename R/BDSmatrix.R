@@ -417,6 +417,9 @@ setMethod('[', 'bdsmatrix',
 #   newmat
 #})
 
-#is.matrix.bdsmatrix <- function(x, ...) is(x, "matrix.bdsmatrix")
-#is.matrix.gchol.bdsmatrix <- function(x, ...) is(x,"matrix.gchol.bdsmatrix")
-#is.matrix.gchol <- function(x, ...) is(x,"matrix.gchol")
+is.matrix.bdsmatrix <- function(x, ...) is(x, "bdsmatrix")
+is.matrix.gchol.bdsmatrix <- function(x, ...) is(x,"gchol.bdsmatrix")
+is.list.bdsmatrix <- function(x, ...) !is(x, "bdsmatrix")
+is.list.gchol.bdsmatrix <- function(x, ...) !is(x, "gchol.bdsmatrix")
+is.bdsmatrix <- function(x) inherits(x, "bdsmatrix")
+is.gchol.bdsmatrix <- function(x) inherits(x, "gchol.bdsmatrix")

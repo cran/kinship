@@ -11,8 +11,7 @@ bdsmatrix-class         Class "bdsmatrix"
 bdsmatrix.ibd           Create a bdsmatrix from a list
 besthint                Create a hints matrix for a pedigree.
 coxme                   Fit a mixed-effects Cox model
-coxme.control           Control parameters for
-                        <s-expression>coxme</s-expression>
+coxme.control           Control parameters for coxme
 familycheck             Error check for a family classification
 gchol                   Generalized Cholesky decompostion
 gchol-class             Class "gchol"

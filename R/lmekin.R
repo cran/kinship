@@ -7,7 +7,7 @@
 #  var(y) = \sigma^2 (I + A), A is \tau^2_1 A_1 + ...
 #  with usually only 1 or two components, the kinship matrix K + an ibd.
 #
-lmekin <- function(fixed, data=sys.parent(), random, 
+lmekin <- function(fixed, data=parent.frame(), random, 
                    varlist=NULL, variance, sparse=c(20,.05),
                    rescale=T, pdcheck=T,
                    subset, weight, na.action) {
@@ -48,7 +48,7 @@ lmekin <- function(fixed, data=sys.parent(), random,
 
     m$formula <- temp.fixed
     m[[1]] <- as.name("model.frame")
-    m <- eval(m, sys.parent())
+    m <- eval(m, sys.frame(sys.parent()))
 
     Terms <- terms(fixed)
     X <- model.matrix(Terms, m)

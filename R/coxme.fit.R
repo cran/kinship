@@ -86,8 +86,7 @@ coxme.fit <- function(x, y, strata, offset, init, control,
         stop("lengths of varlist disagree with ntheta")
     for (i in 1:ncluster) {
         for (j in varlist[[i]]) { #grab each element of the varlist
-# in fact it is bdsmatrix, JH Zhao 14/03/04
-#           if (!is.matrix(j)) stop("varlist subelements must be matrices")
+            if (!is.matrix(j)) stop("varlist subelements must be matrices")
             if (any(dim(j) != rep(nfrail[i],2))) 
                 stop("Invalid dimension in a varlist matrix")
             }

@@ -16,6 +16,10 @@
 \alias{bdsmatrix.reconcile}
 \alias{is.list.bdsmatrix}
 \alias{is.matrix.bdsmatrix}
+\alias{is.matrix.gchol.bdsmatrix}
+\alias{is.bdsmatrix}
+\alias{is.gchol.bdsmatrix}
+\alias{is.list.gchol.bdsmatrix}
 \title{Basic Linear Algebra for classes bdsmatrix and gchol.bdsmatrix}
 \description{Basic linear algebra operators for class \code{bdsmatrix} and 
 \code{gchol.bdsmatrix}}

@@ -4,7 +4,7 @@
 #  At the moment, it supports one more argument: which is a variance
 #  structure.
 
-coxme <- function(fixed=formula(data), data=sys.parent(), random, 
+coxme <- function(fixed=formula(data), data=parent.frame(), random, 
 	weights, subset, na.action, init, 
 	control, ties= c("efron", "breslow", "exact"),
 	singular.ok =T, varlist=NULL, variance, vinit=.2, sparse=c(50,.02),
@@ -35,7 +35,7 @@ coxme <- function(fixed=formula(data), data=sys.parent(), random,
     
     m$formula <- temp.fixed
     m[[1]] <- as.name("model.frame")
-    m <- eval(m, sys.parent())
+    m <- eval(m, sys.frame(sys.parent())) # change according to R FAQ
 
     Terms <- terms(fixed)
     if (missing(control)) control <- coxme.control(...)

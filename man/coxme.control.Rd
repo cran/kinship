@@ -2,7 +2,7 @@
 \alias{coxme.control}
 \alias{strata2}
 \title{
-  Control parameters for <s-expression>coxme</s-expression>
+  Control parameters for coxme
 }
 \description{
 Set various control parameters for the \code{coxme}

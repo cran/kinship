@@ -11,7 +11,7 @@ Returns an object of class \code{coxme} representing the
 fitted model.
 }
 \usage{
-coxme(fixed, data, random, 
+coxme(fixed, data=parent.frame(), random, 
    weights, subset, na.action, init, control, 
    ties=c("efron", "breslow", "exact"), singular.ok=T, 
    varlist, variance, vinit=.2, sparse=c(50, .02), rescale=T, pdcheck=T, x=F, y=T, shortlabel=T,...)

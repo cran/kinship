@@ -12,7 +12,7 @@ A similar function to lme, but allowing for a complete specification of the
 covariance matrix for the random effects.
 }
 \usage{
-lmekin(fixed, data=sys.parent(), random,
+lmekin(fixed, data=parent.frame(), random,
     varlist=NULL, variance, sparse=c(20, .05),
     rescale=T, pdcheck=T,
     subset, weight, na.action)
