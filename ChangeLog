@@ -21,6 +21,7 @@
 01/09/2004 return of is.matrix.* and is.list.* for bdsmatrix,gchol.bdsmatrix, change eval()
 02/09/2004 document is.*.*
 03/09/2004 replace sys.parent() with parent.frame() in coxme/lmekin; uncomment !is.matrix in coxme.fit
+20/12/2004 LazyLoad, LazyData
 
 1. documented or obvious
 

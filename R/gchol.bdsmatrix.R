@@ -75,7 +75,7 @@ as.matrix.gchol.bdsmatrix <- function(x, ones=F){
 setAs('gchol.bdsmatrix', 'matrix', 
       function (from) as.matrix.gchol.bdsmatrix(from))
 
-setMethod('diag', signature('gchol.bdsmatrix'),
+setMethod('diag', signature(x='gchol.bdsmatrix'),
     function(x,nrow=1,ncol=1) {
 	d <- x@.Dim
 	d3 <- sum(x@blocksize)

@@ -22,7 +22,7 @@ function(x, nrow=1, ncol=1) {
     else x@blocks[temp]
     })
 
-setMethod('diag<-', 'bdsmatrix',
+setMethod('diag<-', signature(x='bdsmatrix'),
 function(x, value) {
     if (class(x) != 'bdsmatrix') stop("Argument must be a bdsmatrix object")
     

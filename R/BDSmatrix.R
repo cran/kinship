@@ -13,14 +13,14 @@ setClass('bdsmatrix',
 			offdiag   = 'numeric',
 			.Dim='integer', .Dimnames="list or NULL"))
 
-setMethod('Math', 'bdsmatrix',
+setMethod('Math', signature(x='bdsmatrix'),
 	  function(x) {
 	      x@offdiag <- callGeneric(x@offdiag)
 	      x@blocks  <- callGeneric(x@blocks)
 	      x@rmat    <- callGeneric(x@rmat)
 	      x })
 
-setMethod('Math2', 'bdsmatrix',
+setMethod('Math2', signature(x='bdsmatrix'),
 	  function(x, digits) {
 	      x@offdiag <- callGeneric(x@offdiag, digits)
 	      x@blocks  <- callGeneric(x@blocks, digits)
@@ -36,7 +36,7 @@ setMethod('Math2', 'bdsmatrix',
 # Per a note from Bill Dunlap, max(c(x1,x2,x3)) is faster than max(x1, x2, x3),
 #  when x1, x2, etc are all numeric.  (Up to 50 times faster!)
 #
-setMethod('max', 'bdsmatrix',
+setMethod("max", signature("bdsmatrix"),
 	  function(x, ..., na.rm=F) {
 	      if (length(x@rmat))
 	           max(c(x@offdiag, x@blocks, x@rmat), na.rm=na.rm)
@@ -44,15 +44,15 @@ setMethod('max', 'bdsmatrix',
 	           max(c(x@offdiag, x@blocks), na.rm=na.rm)
 	      })
 
-setMethod('min', 'bdsmatrix',
-	  function(x, ..., na.rm=F) {
-	      if (length(x@rmat))
+setMethod("min", signature("bdsmatrix"),
+	  function(x, ..., na.rm=F ) {
+	      if (length(rmat))
 	           min(c(x@offdiag, x@blocks, x@rmat), na.rm=na.rm)
 	      else
 	           min(c(x@offdiag, x@blocks), na.rm=na.rm)
-	      })
+	      }, valueClass="numeric")
 
-setMethod('range', 'bdsmatrix',
+setMethod('range',signature('bdsmatrix'),
 	  function(x, ..., na.rm=F) {
 	      if (length(x@rmat))
 	           range(c(x@offdiag, x@blocks, x@rmat), na.rm=na.rm)
@@ -60,7 +60,7 @@ setMethod('range', 'bdsmatrix',
 	           range(c(x@offdiag, x@blocks), na.rm=na.rm)
 	      })
 
-setMethod('any', 'bdsmatrix',
+setMethod('any', signature('bdsmatrix'),
 	  function(x, ..., na.rm=F) {
 	      if (length(x@rmat))
 	           any(c(x@offdiag, x@blocks, x@rmat), na.rm=na.rm)
@@ -68,7 +68,7 @@ setMethod('any', 'bdsmatrix',
 	           any(c(x@offdiag, x@blocks), na.rm=na.rm)
 	      })
 
-setMethod('all', 'bdsmatrix',
+setMethod('all', signature('bdsmatrix'),
 	  function(x, ..., na.rm=F) {
 	      if (length(x@rmat))
 	           all(c(x@offdiag, x@blocks, x@rmat), na.rm=na.rm)
@@ -76,7 +76,7 @@ setMethod('all', 'bdsmatrix',
 	           all(c(x@offdiag, x@blocks), na.rm=na.rm)
 	      })
 
-setMethod('sum', 'bdsmatrix',
+setMethod('sum', signature('bdsmatrix'),
 	  function(x, ..., na.rm=F) {
 	      d <- x@.Dim
 	      d3 <- sum(x@blocksize)
@@ -104,7 +104,7 @@ setMethod('sum', 'bdsmatrix',
 	      tsum
 	      })
 
-setMethod('prod', 'bdsmatrix',
+setMethod('prod', signature('bdsmatrix'),
 	  function(x, ..., na.rm=F) {
 	      d <- x@.Dim
 	      d3 <- sum(x@blocksize)
@@ -199,7 +199,7 @@ setMethod('Ops', signature(e1='bdsmatrix', e2='bdsmatrix'),
 		  }
 	      })
 
-setMethod('unique', c('bdsmatrix', 'missing'),
+setMethod('unique', c('bdsmatrix','missing'),
 	  function(x, ...) unique(c(x@offdiag, x@blocks, x@rmat)))
 
 bdsmatrix <- function(blocksize, blocks, rmat, dimnames=NULL) {
