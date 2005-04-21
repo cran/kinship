@@ -8,7 +8,7 @@ coxme.control <- function(eps=1e-5,
 			  inner.iter=4,
 			  iter.max=10,
 			  simplex =0 ,
-			  lower = 1e-6,
+			  lower = 0,
 			  upper = Inf,
 			  sparse.calc=NULL) {
     if (iter.max <0) stop("Invalid value for iterations")
@@ -24,7 +24,7 @@ coxme.control <- function(eps=1e-5,
         }
     if (simplex <0 || simplex != floor(simplex))
 	    stop("Number of simplex iterations must be a positive integer")
-    list(eps=eps, toler.chol=toler.chol, toler.ms=toler.ms, iter.max=iter.max,
+    list(eps=eps, toler.chol=toler.chol, iter.max=iter.max,
 	 inner.iter=inner.iter, sparse.calc=sparse.calc,
-	 simplex=simplex, lower=lower, upper=upper)
+	 simplex=simplex, lower=lower, upper=upper, toler.ms=toler.ms)
     }

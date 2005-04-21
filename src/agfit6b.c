@@ -460,9 +460,13 @@ void agfit6b(  Sint *maxiter,  double *beta,
 	**   Am I done?
 	** Note, when doing "minimum" iterations, don't allow step halving at
 	**  the tail end of the iterations.  
+        ** The "newlk>0" is for a rare-rare case where the NR overreaches
+        **  very badly (likely on iteration 1), leading to catastophic
+        **  cancellation in a subtraction, a negative denominator, and infinite
+        **  likelihood.
 	*/
-	if (iter>0 && newlik < loglik[1] && 
-	           fabs(1-(loglik[1]/newlik)) > c6.eps)  {  
+	if (newlik>0 || (iter>0 && newlik < loglik[1] && 
+	           fabs(1-(loglik[1]/newlik)) > c6.eps))  {  
 	    /*it is not converging ! */
 	    halving =1;
 	    for (i=0; i<nvar3; i++)

@@ -132,7 +132,7 @@ setMethod('[', 'gchol.bdsmatrix',
     
     # The only case where the result is still a Cholesky is if you grab the
     #  first k rows/cols
-    if (length(rows)==length(cols) && all(rows=cols) && 
+    if (length(rows)==length(cols) && all(rows==cols) && 
                                       all(rows== 1:(length(rows)))) {
         brows <- rows[rows <= d3]  #the block-diagonal portion
         brlen <- length(brows)

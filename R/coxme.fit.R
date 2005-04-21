@@ -231,10 +231,10 @@ coxme.fit <- function(x, y, strata, offset, init, control,
     #  a copy of each arg, and that would be a lot of memory.  But doing
     #  these 2 does mean I don't have to do it in the function, nor pass
     #  the args through the nlmin() calling tree
-    # kfun[[3]] <- varlist[[1]][[1]]@blocksize 
-    # kfun[[4]] <- sum(nfrail-nsparse)
-    formals(kfun)[[3]] <- varlist[[1]][[1]]@blocksize
-    formals(kfun)[[4]] <- sum(nfrail-nsparse)
+    kfun[[3]] <- varlist[[1]][[1]]@blocksize 
+    kfun[[4]] <- sum(nfrail-nsparse)
+    #formals(kfun)[[3]] <- varlist[[1]][[1]]@blocksize
+    #formals(kfun)[[4]] <- sum(nfrail-nsparse)
     
     # We need to call kfun at least once before the first .C routine
     #  to get the sizes of things.  What should we use as an intial estimate 
@@ -402,7 +402,8 @@ coxme.fit <- function(x, y, strata, offset, init, control,
                                fit0, iter, kfun) {
                 temp <- theta
                 temp[tindex] <- x
-                ikmat <- solve(kfun(temp, varlist), full=F)
+                gkmat <- gchol(kfun(temp, varlist))
+                ikmat <- solve(gkmat)
 		if (any(diag(ikmat) <=0)) { #Not an spd matrix
 		    return(0)  # return a "worse than null" fit
 		    }
@@ -414,8 +415,8 @@ coxme.fit <- function(x, y, strata, offset, init, control,
                           as.double(ikmat@rmat),
                           hdet = double(1),
                           copy=c(F,T,T,T,F,F,T), PACKAGE="kinship")
-		ilik <- 1+ fit$loglik[2] +
-                        .5*(sum(log(diag(gchol(ikmat)))) - fit$hdet)
+		ilik <- 1+ fit$loglik[2] -
+                        .5*(sum(log(diag(gkmat))) + fit$hdet)
                         -(ilik - fit0) 
 		}
     
@@ -533,10 +534,10 @@ coxme.fit <- function(x, y, strata, offset, init, control,
         #
         # Now do one more iteration, to get the final coefs
         #
-        iter <- c(mfit$iter, (mfit$counts[1] + mfit$counts[2])*4 + fit$iter[2])
+        iter <- c(mfit$iter, (mfit$f.evals + mfit$g.evals)*4 + fit$iter[2])
         theta[tindex] <- mfit$par
         gkmat <- gchol(kfun(theta, varlist))
-        ikmat <- solve(gkmat)
+        ikmat <- solve(gkmat,full=T)  #the inverse of K, not of gchol(K)
         fit <- .C(routines[2],
                   iter=as.integer(c(0,control$iter.max)),
                   beta = as.double(fit$beta),

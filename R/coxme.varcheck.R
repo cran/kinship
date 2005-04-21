@@ -102,7 +102,8 @@ coxme.varcheck <- function(ncluster, varlist, n, gvars, groups, sparse,
 		# It will be a list, not a list of lists
                 ntheta[i] <- length(tlist)
                 if (rescale) {
-                    for (kmat in tlist) {
+                    for (j in 1:ntheta[i]) {
+                        kmat <- tlist[[j]]
                         # scale the kinship matrix to have a diagonal of 1's.  
                         #  This may already have been done by the user
                         # With inbreeding, the diagonal might not be constant.
@@ -120,7 +121,7 @@ coxme.varcheck <- function(ncluster, varlist, n, gvars, groups, sparse,
 			    stop("Diagonal of a variance matrix is 0!")
                         if (max(temp) !=1) {
                             kmat <- kmat/max(temp)
-                            tlist[[i]] <- kmat
+                            tlist[[j]] <- kmat
                             }
                         }
 		    }

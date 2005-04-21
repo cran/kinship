@@ -11,7 +11,7 @@ function.
 \usage{
 coxme.control(eps=0.00001, toler.chol=.Machine$double.eps^0.75, 
 toler.ms=.01, inner.iter=4, 
-iter.max=10, simplex=0, lower=1e-6, upper=Inf, sparse.calc=NULL )
+iter.max=10, simplex=0, lower=0, upper=Inf, sparse.calc=NULL )
 }
 \arguments{
 

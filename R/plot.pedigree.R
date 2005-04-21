@@ -650,5 +650,11 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
     
     if(!keep.par) par(oldpar)
 
-    invisible(list(plist=plist,object=x,x=xp,y=yp,textoff=textoff))
+    ## reorder xp and yp so that they are in the same order as plist
+    tmp <- plist$nid[plist$nid!=0]
+    xp2 <- xp[order(tmp)]
+    yp2 <- yp[order(tmp)]
+
+    invisible(list(plist=plist,object=x,x=xp2,y=yp2,textoff=textoff,
+                   symbolsize=symbolsize))
 }
