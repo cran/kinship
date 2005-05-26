@@ -231,10 +231,10 @@ coxme.fit <- function(x, y, strata, offset, init, control,
     #  a copy of each arg, and that would be a lot of memory.  But doing
     #  these 2 does mean I don't have to do it in the function, nor pass
     #  the args through the nlmin() calling tree
-    kfun[[3]] <- varlist[[1]][[1]]@blocksize 
-    kfun[[4]] <- sum(nfrail-nsparse)
-    #formals(kfun)[[3]] <- varlist[[1]][[1]]@blocksize
-    #formals(kfun)[[4]] <- sum(nfrail-nsparse)
+    # kfun[[3]] <- varlist[[1]][[1]]@blocksize 
+    # kfun[[4]] <- sum(nfrail-nsparse)
+    formals(kfun)[[3]] <- varlist[[1]][[1]]@blocksize
+    formals(kfun)[[4]] <- sum(nfrail-nsparse)
     
     # We need to call kfun at least once before the first .C routine
     #  to get the sizes of things.  What should we use as an intial estimate 
@@ -534,7 +534,7 @@ coxme.fit <- function(x, y, strata, offset, init, control,
         #
         # Now do one more iteration, to get the final coefs
         #
-        iter <- c(mfit$iter, (mfit$f.evals + mfit$g.evals)*4 + fit$iter[2])
+        iter <- c(fit$iter[2], (mfit$counts[1] + mfit$counts[2])*4 + fit$iter[2])
         theta[tindex] <- mfit$par
         gkmat <- gchol(kfun(theta, varlist))
         ikmat <- solve(gkmat,full=T)  #the inverse of K, not of gchol(K)

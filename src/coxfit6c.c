@@ -16,7 +16,7 @@
 #include "kinproto.h"
 
 /* the next line is just so that I can use "c6.n" instead of "coxfit6.n", etc*/
-static struct coxfit6 c6;
+extern struct coxfit6 c6;
 
 void coxfit6c(double *u,      double *imatb,
 	      double *imatr, double *hinvb, double *hinvr,
