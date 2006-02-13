@@ -5,8 +5,8 @@ as.matrix.bdsmatrix     a function for bdsmatrix
 autohint                Align a pedigree to print well
 bdsBlock                Block diagonal matrices.
 bdsI                    Sparse identity matrices
-bdsmatrix               Create a sparse symmetric block diagonal
-                        matrix object
+bdsmatrix               Create a sparse symmetric block diagonal matrix
+                        object
 bdsmatrix-class         Class "bdsmatrix"
 bdsmatrix.ibd           Create a bdsmatrix from a list
 besthint                Create a hints matrix for a pedigree.
@@ -14,10 +14,9 @@ coxme                   Fit a mixed-effects Cox model
 coxme.control           Control parameters for coxme
 familycheck             Error check for a family classification
 gchol                   Generalized Cholesky decompostion
-gchol-class             Class "gchol"
-gchol-methods           Methods for Function gchol in Package
-                        'kinship'
 gchol.bdsmatrix-class   Class "gchol.bdsmatrix"
+gchol-class             Class "gchol"
+gchol-methods           Methods for Function gchol in Package 'kinship'
 kinship                 Compute a kinship matrix
 list or NULL-class      Class "list or NULL"
 lmekin                  Linear Mixed Effects model using a kinship

@@ -29,6 +29,9 @@
 21/03/2005 move tests into inst
 21/04/2005 update according to kinship_S.1.2.tar.gz
 24/05/2005 fix formals in coxme.fit according to Anissa Alfakir, add coxph.wtest and rearrange c6 in coxfit6.h
+24/01/2006 remove c6 in coxfit6.h from error message posted by Jan de Leeuw, so coxfit6?.c compile
+12/02/2006 add example to plot.pedigree
+13/02/2006 revmove assign.dat in R directory
 
 1. documented or obvious
 

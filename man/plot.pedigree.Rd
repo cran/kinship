@@ -80,6 +80,7 @@ creates plot on current plotting device.
 }
 \examples{
 \dontrun{
+# The original example
 ptemp <- pedigree(id=d10$upn, dadid=d10$dadid, momid=d10$momid, 
                   sex=d10$sex, affected=d10$affect)
 
@@ -91,6 +92,36 @@ col.founder[d10$id==1] <- 2
 plot(ptemp, affected=cbind(d10$affect,d10$affect2,d10$affect3,d10$affect4),
      col=col.founder, id=paste(ptemp$id,'\n','(',d10$post,')',sep=''),
      angle=c(90,80,70,60), density=c(-1,90,70,50))
+
+# The example to R News and Bioinformatics
+# pedigree 10081 in GAW14
+p1 <- scan(nlines=16,what=list(0,0,0,0,0,"",""))
+ 1   2   3  2  2  7/7  7/10 
+ 2   0   0  1  1  -/-  -/-  
+ 3   0   0  2  2  7/9  3/10 
+ 4   2   3  2  2  7/9  3/7  
+ 5   2   3  2  1  7/7  7/10 
+ 6   2   3  1  1  7/7  7/10 
+ 7   2   3  2  1  7/7  7/10 
+ 8   0   0  1  1  -/-  -/-  
+ 9   8   4  1  1  7/9  3/10 
+10   0   0  2  1  -/-  -/- 
+11   2  10  2  1  7/7  7/7 
+12   2  10  2  2  6/7  7/7 
+13   0   0  1  1  -/-  -/- 
+14  13  11  1  1  7/8  7/8 
+15   0   0  1  1  -/-  -/- 
+16  15  12  2  1  6/6  7/7 
+
+p2 <- as.data.frame(p1)
+names(p2) <- c("id","fid","mid","sex","aff","GABRB1","D4S1645")
+attach(p2)
+sex <- sex-1
+p3 <- pedigree(id,fid,mid,sex,aff)
+pdf("10081.pdf")
+par(xpd=TRUE)
+plot(p3)
+dev.off()
 }
 }
 \keyword{hplot}
