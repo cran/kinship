@@ -64,14 +64,14 @@ pedigree <- function(id, dadid, momid, sex, affected, status, relations) {
 	    if (is.factor(affected))  affected <- as.numeric(affected) -1
 	    }
 	if(max(affected) >min(affected)) affected <- affected - min(affected)
-	if (!all(affected==0 | affected==1))
+	if (!all(affected==0 | affected==1 | affected==2))
 		stop("Invalid code for affected status")
 	temp$affected <- affected
 	}
 
     if(!missing(status)) {
 	if(length(status) != n)
-		stop("Wrong length for affected")
+		stop("Wrong length for status")
 	if(any(status != 0 & status != 1))
 		stop("Invalid status code")
 	temp$status <- status

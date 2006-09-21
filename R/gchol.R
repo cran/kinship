@@ -14,7 +14,7 @@
 
 # JH Zhao 27/3/2004
 setGeneric("gchol", function(x,tolerance=1e-10) if(class(x) == 'matrix')
-standardGeneric("gchol") else gchol.bdsmatrix(x,tolerance))
+         standardGeneric("gchol") else gchol.bdsmatrix(x,tolerance))
 
 setClass('gchol', 
 	 representation(.Data= 'numeric',

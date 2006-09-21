@@ -57,7 +57,7 @@ exportMethods(
              "diag",
              "diag<-",
              "gchol",
-             "Math","Math2","Ops","Summary",
+             "Math","Math2","Ops",
              "show",
              "unique"
              )
