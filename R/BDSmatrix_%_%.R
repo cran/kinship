@@ -2,8 +2,9 @@
 # Matrix multiplication for symmetric block diagonal (bds) matrices
 # renamed from %*%.bdsmatrix.s
 
-'%*%' <- function(x,y) UseMethod('%*%') 
-'%*%.default' <- function(x,y) get("%*%",pos=NULL,mode="any")(x,y)
+#'%*%' <- function(x,y) UseMethod('%*%') 
+#'%*%.default' <- function(x,y) get("%*%",NULL,0)(x,y)
+'%*%' <- setGeneric("%*%")
 
 '%*%.bdsmatrix' <- function(x, y) {
     if (!inherits(x, 'bdsmatrix'))
@@ -96,3 +97,4 @@ setMethod("%*%", signature(x='numeric', y='bdsmatrix'),
     # About the only thing to call this, ever, is lmekin.
     # So don't bother about dimnames
     }
+

@@ -31,7 +31,10 @@
 24/05/2005 fix formals in coxme.fit according to Anissa Alfakir, add coxph.wtest and rearrange c6 in coxfit6.h
 24/01/2006 remove c6 in coxfit6.h from error message posted by Jan de Leeuw, so coxfit6?.c compile
 12/02/2006 add example to plot.pedigree
-13/02/2006 revmove assign.dat in R directory
+13/02/2006 remove assign.dat in R directory
+06/10/2006 add methods to depends list in DESCRIPTION (1.1.0-12) according to R 2.4.0
+           recover methods in import list and remove 'Summary' from exportMethods (NAMESPACE) by Kurt Hornik
+10/10/2006 remove S3 definitions assoiated with %*% (1.1.0-13) and use setGeneric (environment=NULL invalid in R 2.4.0)
 
 1. documented or obvious
 

@@ -636,7 +636,7 @@ coxme.fit <- function(x, y, strata, offset, init, control,
     trace <- tprod(hinv, ikmat)
     df <- (nfrail + nvar) - trace   # formula 5.16 of the book
     fcoef <- fit$beta[1:nfrail]
-    b.sigma.b <- sum(fcoef * (ikmat %*% fcoef))
+    b.sigma.b <- sum(fcoef %*% (as.matrix(ikmat) %*% fcoef))
     idf <- nvar + sum(ntheta)
 
     time3 <- proc.time()

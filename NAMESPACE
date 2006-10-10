@@ -1,7 +1,6 @@
 useDynLib(kinship)
 import(lattice,methods,nlme,survival)
-export ("%*%",
-       "align.pedigree",
+export ("align.pedigree",
        "alignped1",
        "alignped2",
        "alignped3",
@@ -31,7 +30,6 @@ export ("%*%",
        "plot.pedigree",
        "strata2"
        )
-S3method("%*%",default)
 S3method(as.matrix,bdsmatrix)
 S3method(as.matrix,gchol.bdsmatrix)
 S3method(is.list,bdsmatrix)
