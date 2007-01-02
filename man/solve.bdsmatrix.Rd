@@ -9,7 +9,7 @@ A is a block diagonal sparse matrix
 (an object of class \code{bdsmatrix}).
 }
 \usage{
-solve.bdsmatrix(a, b, tolerance=1e-10, full=T, \ldots)
+\method{solve}{bdsmatrix}(a, b, tolerance=1e-10, full=T, \ldots)
 }
 \arguments{
 \item{a}{

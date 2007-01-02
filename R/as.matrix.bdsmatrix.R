@@ -1,5 +1,5 @@
 # $Id: as.matrix.bdsmatrix.s,v 1.2 2002/12/26 22:54:47 Therneau Exp $
-as.matrix.bdsmatrix <- function(x)
+as.matrix.bdsmatrix <- function(x,...)
 {
   if (class(x) != 'bdsmatrix') stop('argument must be a bdsmatrix object')
       dd <- dim(x)

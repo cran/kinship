@@ -5,7 +5,7 @@
   This is a generalized solve function for gchol.bdsmatrix object
 }
 \usage{
-solve.gchol.bdsmatrix(a, b, full=T, \ldots)
+\method{solve}{gchol.bdsmatrix}(a, b, full=T, \ldots)
 }
 \arguments{
   \item{a}{ \code{a} }

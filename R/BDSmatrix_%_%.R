@@ -2,8 +2,9 @@
 # Matrix multiplication for symmetric block diagonal (bds) matrices
 # renamed from %*%.bdsmatrix.s
 
+# Both S3 and S4 work
 #'%*%' <- function(x,y) UseMethod('%*%') 
-#'%*%.default' <- function(x,y) get("%*%",NULL,0)(x,y)
+#'%*%.default' <- base::"%*%" #function(x,y) get("%*%",NULL)(x,y)
 '%*%' <- setGeneric("%*%")
 
 '%*%.bdsmatrix' <- function(x, y) {

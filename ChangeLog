@@ -35,6 +35,8 @@
 06/10/2006 add methods to depends list in DESCRIPTION (1.1.0-12) according to R 2.4.0
            recover methods in import list and remove 'Summary' from exportMethods (NAMESPACE) by Kurt Hornik
 10/10/2006 remove S3 definitions assoiated with %*% (1.1.0-13) and use setGeneric (environment=NULL invalid in R 2.4.0)
+11/10/2006 add \method markup to solve.* and as.matrix.bdsmatrix (1.1.0-14) according to Kurt Hornik
+02/01/2007 add ... to as.matrix according to R 2.5.0
 
 1. documented or obvious
 

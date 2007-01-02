@@ -31,6 +31,7 @@ export ("align.pedigree",
        "strata2"
        )
 S3method(as.matrix,bdsmatrix)
+S3method(as.matrix,gchol)
 S3method(as.matrix,gchol.bdsmatrix)
 S3method(is.list,bdsmatrix)
 S3method(is.list,gchol.bdsmatrix)

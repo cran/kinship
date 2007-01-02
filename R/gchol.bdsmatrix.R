@@ -52,7 +52,7 @@ gchol.bdsmatrix <- function(x, tolerance=1e-9) {
 # 
 #  return L, from the LDL' decompostion
 #
-as.matrix.gchol.bdsmatrix <- function(x, ones=F){
+as.matrix.gchol.bdsmatrix <- function(x, ones=F, ...){
     dd <- x@.Dim
     n <- dd[1]
     newmat <- matrix(0., n, n, dimnames=x@.Dimnames)

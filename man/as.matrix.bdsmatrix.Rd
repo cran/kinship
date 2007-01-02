@@ -7,10 +7,11 @@ a function for bdsmatrix
 A function for bdsmatrix
 }
 \usage{
-as.matrix.bdsmatrix(x)
+\method{as.matrix}{bdsmatrix}(x,...)
 }
 \arguments{
 \item{x}{a bdsmatrix}
+\item{...}{additional arguments to be passed}
 }
 \examples{
 \dontrun{

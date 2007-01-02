@@ -22,7 +22,7 @@ setClass('gchol',
 			.Dimnames = 'list or NULL',
 			rank = 'integer'))
 			
-as.matrix.gchol <- function(x, ones=T) {
+as.matrix.gchol <- function(x, ones=T, ...) {
     temp <- matrix(x@.Data, x@.Dim[1], dimnames=x@.Dimnames, byrow=T)
     if (ones) diag(temp) <- 1
     temp
