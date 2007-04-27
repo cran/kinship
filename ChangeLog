@@ -37,6 +37,7 @@
 10/10/2006 remove S3 definitions assoiated with %*% (1.1.0-13) and use setGeneric (environment=NULL invalid in R 2.4.0)
 11/10/2006 add \method markup to solve.* and as.matrix.bdsmatrix (1.1.0-14) according to Kurt Hornik
 02/01/2007 add ... to as.matrix according to R 2.5.0
+27/04/2007 add standard errors to lmekin (lm.fit --> lm) as pointed by Qiong Yand and Yangchun Du from Boston Univ
 
 1. documented or obvious
 

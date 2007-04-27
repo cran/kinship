@@ -174,8 +174,11 @@ lmekin <- function(fixed, data=parent.frame(), random,
                                   tkmat@blocks
         }
     gk <- gchol(tkmat)
-    lfit <- lm.fit(as.matrix(solve(gk, newX, full=F)), 
-                   solve(gk, newY, full=F))
+#    lfit <- lm.fit(as.matrix(solve(gk, newX, full=F)), 
+#                   solve(gk, newY, full=F))
+    xok <- as.matrix(solve(gk, newX, full=F))
+    yok <-  solve(gk, newY, full=F)
+    lfit <- lm(yok~0+xok)
     names(lfit$coefficients) <- dimnames(X)[[2]]
     ls <- summary(lfit)
     resid.var <- mean(lfit$residuals^2)   #differs from ls$sigma, division by N
