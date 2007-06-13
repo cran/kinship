@@ -58,7 +58,7 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
               affected <- matrix(affected - min(affected),nrow=n)
         else
               affected <- matrix(affected,nrow=n)
-	if (!all(affected==0 | affected==1))
+	if (!all(affected==0 | affected==1 | affected==2))
 		stop("Invalid code for affected status")
 	}
   

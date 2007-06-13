@@ -21,6 +21,13 @@ print.lmekin <- function(x, ...) {
         }
     print(x$ctable)
     cat("\n")
+    l <- 2:(dim(x$var)[1])
+    df <- length(l)
+    if (df>0) {
+        w.chisq <- x$coef$fixed[l]%*%solve(x$var[l,l])%*%x$coef$fixed[l]
+        cat("Wald test of fixed effects = ", w.chisq, "df = ", df, "p = ", 1-pchisq(w.chisq,df))
+        cat("\n\n")
+    }
     
     randF <- x$call$random
     if(inherits(randF, "formula") || is.call(randF)) {

@@ -40,7 +40,7 @@ coxme <- function(fixed=formula(data), data=parent.frame(), random,
     time0 <- proc.time()
     ties <- match.arg(ties)
     call <- match.call()
-    m <- match.call(expand=F)
+    m <- match.call(expand.dots=FALSE)
     temp <- c("", "data", "weights", "subset", "na.action")
     m <- m[ match(temp, names(m), nomatch=0)]
 
@@ -62,7 +62,7 @@ coxme <- function(fixed=formula(data), data=parent.frame(), random,
     
     m$formula <- temp.fixed
     m[[1]] <- as.name("model.frame")
-    m <- eval(m, sys.frame(sys.parent())) # change according to R FAQ
+    m <- eval(m, sys.parent())
 
     Terms <- terms(fixed)
     if (missing(control)) control <- coxme.control()
@@ -104,8 +104,8 @@ coxme <- function(fixed=formula(data), data=parent.frame(), random,
 	strats <- as.numeric(strata.keep)
 	}
 
-    if (length(dropx)) X <- model.matrix(Terms[-dropx], m)[,-1,drop=F]
-    else               X <- model.matrix(Terms, m)[,-1,drop=F]
+    if (length(dropx)) X <- model.matrix(Terms[-dropx], m)[,-1,drop=FALSE]
+    else               X <- model.matrix(Terms, m)[,-1,drop=FALSE]
 	
     type <- attr(Y, "type")
     if (type!='right' && type!='counting')

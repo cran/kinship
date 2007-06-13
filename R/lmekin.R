@@ -15,7 +15,7 @@ lmekin <- function(fixed, data=parent.frame(), random,
     # however, we assume a random statement that has just one effect, and
     # match it up with the kinship matrix
     call <- match.call()
-    m <- match.call(expand=F)
+    m <- match.call(expand.dots=FALSE)
     temp <- c("", "data", "weights", "subset", "na.action")
     m <- m[ match(temp, names(m), nomatch=0)]
 
@@ -48,7 +48,7 @@ lmekin <- function(fixed, data=parent.frame(), random,
 
     m$formula <- temp.fixed
     m[[1]] <- as.name("model.frame")
-    m <- eval(m, sys.frame(sys.parent()))
+    m <- eval(m, sys.parent())
 
     Terms <- terms(fixed)
     X <- model.matrix(Terms, m)
@@ -138,8 +138,8 @@ lmekin <- function(fixed, data=parent.frame(), random,
         # (It multiplies one term and divides the other).
         tkmat@blocks <- tkmat@blocks/ tkmat@blocks[1]
         gk <- gchol(tkmat)
-        newx <- solve(gk, X, full=F)
-        newy <- solve(gk, Y, full=F)
+        newx <- solve(gk, X, full=FALSE)
+        newy <- solve(gk, Y, full=FALSE)
         resid <- qr.resid(qr(newx), newy)
         n <- length(Y)
         loglik <- (n/2)*(log(mean(resid^2)) - center) + 
@@ -177,7 +177,7 @@ lmekin <- function(fixed, data=parent.frame(), random,
 #    lfit <- lm.fit(as.matrix(solve(gk, newX, full=F)), 
 #                   solve(gk, newY, full=F))
     xok <- as.matrix(solve(gk, newX, full=F))
-    yok <-  solve(gk, newY, full=F)
+    yok <-  solve(gk, newY, full=FALSE)
     lfit <- lm(yok~0+xok)
     names(lfit$coefficients) <- dimnames(X)[[2]]
     ls <- summary(lfit)
@@ -193,9 +193,11 @@ lmekin <- function(fixed, data=parent.frame(), random,
     names(frail) <- groups
     
     fcoef <- lfit$coef
+    call$fixed <- fixed
+    call$random <- random
     fit <- list(coefficients=list(fixed=fcoef, random=frail),
                 theta = theta,
-                variance= ls$cov.unscaled * resid.var,
+                variance= ls$cov.unscaled * ls$sigma^2,
                 ctable = ls$coefficients,
                 residuals= residuals,
                 fitted.values= fitted,

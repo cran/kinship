@@ -38,6 +38,10 @@
 11/10/2006 add \method markup to solve.* and as.matrix.bdsmatrix (1.1.0-14) according to Kurt Hornik
 02/01/2007 add ... to as.matrix according to R 2.5.0
 27/04/2007 add standard errors to lmekin (lm.fit --> lm) as pointed by Qiong Yand and Yangchun Du from Boston Univ
+24/05/2007 change match.call(expand=F) to match.call(expand.dots=F)
+30/05/2007 export S3 methods in NAMESPACE, change sys.frame(sys.parents()) back to sys.parent() in coxme and lmekin
+31/05/2007 add Wald test for fixed effects in print.lmekin as suggested by Qiong Yang
+07/06/2007 add affected==2 in !all(affected=0 | affected==1) of plot.pedigree
 
 1. documented or obvious
 
