@@ -18,7 +18,7 @@
 \alias{dim,bdsmatrix-method}
 \alias{dimnames,bdsmatrix-method}
 \alias{dimnames<-,bdsmatrix-method}
-\alias{max,bdsmatrix,method}
+\alias{max,bdsmatrix-method}
 \alias{min,bdsmatrix-method}
 \alias{prod,bdsmatrix-method}
 \alias{range,bdsmatrix-method}

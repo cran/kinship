@@ -21,9 +21,10 @@ print.lmekin <- function(x, ...) {
         }
     print(x$ctable)
     cat("\n")
-    l <- 2:(dim(x$var)[1])
-    df <- length(l)
-    if (df>0) {
+    l2 <- dim(x$var)[1]
+    if (l2>2) {
+        l <- 2:l2
+        df <- length(l)
         w.chisq <- x$coef$fixed[l]%*%solve(x$var[l,l])%*%x$coef$fixed[l]
         cat("Wald test of fixed effects = ", w.chisq, "df = ", df, "p = ", 1-pchisq(w.chisq,df))
         cat("\n\n")

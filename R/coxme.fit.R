@@ -371,7 +371,7 @@ coxme.fit <- function(x, y, strata, offset, init, control,
             itemp1 <- ikmat@blocks * vinit  # ikmat for vinit =1
             if (length(ikmat@rmat) >0) itemp2 <- as.vector(ikmat@rmat * vinit)
             else itemp2 <- 0
-            logfun <- function(x, iblock, rmat, nf, gdet, ofile, fit0, 
+            logfun1 <- function(x, iblock, rmat, nf, gdet, ofile, fit0, 
                                iter, init) {
                 if (x<=0) return(-1)# return a "same as null" fit
                 fit <- .C(ofile,
@@ -389,7 +389,7 @@ coxme.fit <- function(x, y, strata, offset, init, control,
 		}
 
             gdet <- sum(log(diag(gkmat))) - nfrail*log(vinit) 
-	    mfit <- optim(par=vinit, logfun, method="L-BFGS-B",
+	    mfit <- optim(par=vinit, logfun1, method="L-BFGS-B",
 			  lower=control$lower, upper=control$upper,
 			  control=list(pgtol=control$toler.ms),    # pgtol as reltol
 			  iblock=itemp1, rmat=itemp2, init=fit$beta,
@@ -516,7 +516,7 @@ coxme.fit <- function(x, y, strata, offset, init, control,
 			    }
 			step <- 'reflect'
 			}
-                    if (sqrt(var(result)) < toler.ms) break
+                    if (sqrt(var(result)) < control$toler.ms) break
 		    }
 		vinit <- apply(points,1,mean)  #center of final simplex
 		vmin  <- apply(points,1,min)
