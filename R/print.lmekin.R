@@ -22,7 +22,7 @@ print.lmekin <- function(x, ...) {
     print(x$ctable)
     cat("\n")
     l2 <- dim(x$var)[1]
-    if (l2>2) {
+    if (l2>1) {
         l <- 2:l2
         df <- length(l)
         w.chisq <- x$coef$fixed[l]%*%solve(x$var[l,l])%*%x$coef$fixed[l]

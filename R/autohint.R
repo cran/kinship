@@ -1,4 +1,4 @@
-# $Id: autohint.s,v 1.3 2003/09/19 18:51:02 Therneau Exp $ 
+# $Id: autohint.s,v 1.4 2007/12/12 23:13:24 therneau Exp $ 
 #
 # Try to guess a decent hint matrix at the start of a pedigree
 # The algorithm is pretty simple minded:
@@ -143,19 +143,22 @@ autohint <- function(ped) {
 	    dups[idlist==id] <- F   # avoid redoing this subject
 	    xpos <- (1:plist$n[lev])[idlist==id] #positions at which he/she is
 		
-	    # Look at the first instance of the person (if they
-	    #  appear 3+ times, we ignore the others).  My "doppleganger"
+	    # Look at the first instance of the person.  My "doppleganger"
 	    #  will be to the right, so make sure that I am listed as the
-	    #  right hand part of any marriage, and of any set of sibs.
+	    #  right hand part of any marriage, and of any set of sibs.  That
+            #  way there is a chance that the two symbols for me will overlap.
 	    # Is "id" the left or right part of this union?  
 	    # Use that to get my spouse's id
 	    x <- xpos[1]   # index, in the row, of this plot symbol
+            if (plist$spouse[lev,x]) spouse.x <- x+1
+            else                     spouse.x <- x-1
+            spouseid <- idlist[spouse.x]
 
-	    family <- plist$fam[lev,x]
+	    family <- plist$fam[lev,x]                
 	    if (family > 0) {
-		# I have sibs at this spot, list me rightmost among
-		#  them (even an only child will have family >0, at the
-		#  parental connection point)
+		# This particular instance of me in the tree is the one that
+                #  is attached to my parents (and sibs if I have them).  Make
+		#  me the rightmost of the sibs.
 		sibs <- match(plist$fam[lev,], family, nomatch=0)
 		sibs <- idlist[sibs>0]
 		hints[ ,1] <- shift(id, sibs, F, hints[,1], twinrel, twinset)
@@ -163,45 +166,53 @@ autohint <- function(ped) {
 		# I have a dotted line connection to the right.  This means
 		#  that I'm the spouse of someone further to the right in the
 		#  pedigree (second listing of me is the redundant one).  The
-		#  correct marking for the order of the marriage will be
-		#  taken care of in block 2 below.
+		#  correct marking for the order of that marriage will be
+		#  taken care of further below.
 		# If I also have a solid line connection to the right this may
 		#  be an insoluble case (both these spouses need to be to the
-		#  immediate right).  Assume the simplifying case, that the
-		#  solid line connects to a founder, and I am free to list
-		#  him/her on the left (unless there is one already there).
+		#  immediate right).  Assume the simplifying case, i.e., that
+                #  I displace the current "right spouse" to without
+                #  harming things (unless there is already one to the left).
+		# 
 		if (plist$spouse[lev,x] && 
 		          (x==1 || !plist$spouse[lev,x-1])){
-		    hints[id,2] <- -idlist[x+1]
-		    hints[idlist[x+1],2] <- 0   #don't let them hint at me
+		    hints[id,2] <- spouseid
+		    hints[spouseid,2] <- 0   #don't let them hint at me
 		    }
 		}
 	    else {
 		# My family is somewhere to the right, but my spouse is here
 		#  Make sure that I am listed as his/her "right" marriage
 		#  If spouse has sibs at this point, make him/her rightmost
-		if (plist$spouse[lev,x]) spouse.x <- x+1
-		else                     spouse.x <- x-1
-		spouseid <- idlist[spouse.x]
-		if (hints[spouseid,2] == 0) hints[spouseid,2] <-  id
-		else                        hints[id,2] <- -spouseid
+                # If both spouse slots are taken, then don't do anything.
+                #   (You sometimes can't get multiple families correct all
+                #   at the same time, especially with animals).
+                if (hints[spouseid,2]== 0 || hints[id,2]== 0){
+                    if (hints[spouseid,2] == 0) hints[spouseid,2] <-  id
+                    else                        hints[id,2] <- -spouseid
 		
-		family <- plist$fam[lev,spouse.x]
-		if (family > 0) {
-		    sibs <- match(plist$fam[lev,], family, nomatch=0)
-		    sibs <- idlist[sibs>0]
-		    hints[,1] <- shift(spouseid, sibs, F, hints[,1],
+                    family <- plist$fam[lev,spouse.x]
+                    if (family > 0) {
+                        sibs <- match(plist$fam[lev,], family, nomatch=0)
+                        sibs <- idlist[sibs>0]
+                        hints[,1] <- shift(spouseid, sibs, F, hints[,1],
 				                twinrel, twinset)
-		    }
+                        }
+                    }
 		}
 
 	    #
 	    # Block 2
-	    # Now care for the right-hand instance.  My "doppleganger"
+	    # Now care for the second instance of my symbol.  My "doppleganger"
 	    #  will be to the left, so make sure that I am listed as the
 	    #  left hand part of any marriage, and of any set of sibs.
+            # 
 	    x <- xpos[2]  
-	    family <- plist$fam[lev,x]
+            if (plist$spouse[lev,x]) spouse.x <- x+1
+            else                     spouse.x <- x-1
+            spouseid <- idlist[spouse.x]
+	    
+            family <- plist$fam[lev,x]
 	    if (family > 0) {
 		# I have sibs at this spot
 		sibs <- match(plist$fam[lev,], family, nomatch=0)
@@ -210,29 +221,38 @@ autohint <- function(ped) {
 
 		# I have a dotted line connection to the left.  If I also
 		#  have a solid line connection, and no current right-hand
-		#  spouse, move that spouse to my right.
+		#  spouse, we can displace that spouse.
 		if (plist$spouse[lev, x-1] && !plist$spouse[lev,x]) {
-		    hints[id,2] <- idlist[x-1]
-		    hints[idlist[x-1], 2] <- 0
+		    hints[id,2] <- spouseid
+		    hints[spouseid, 2] <- 0
 		    }
 		}
 	    else {
 		# Must be a marriage at this point, make me leftmost
 		#  If spouse has sibs at this point, make him/her leftmost
-		if (plist$spouse[lev,x]) spouse.x <- x+1
-		else                     spouse.x <- x-1
-		spouseid <- idlist[spouse.x]
-		if (hints[spouseid,2] == 0) hints[spouseid,2] <- -id
-		else                        hints[id,2] <- spouseid
+                # If both hint slots are taken, or these two subjects are 
+                #  already mapped to each other, leave things alone.
+                if ((hints[id]==0 || hints[spouseid]==0) && 
+                        (abs(hints[id]) != spouseid)  &&
+                        (abs(hints[spousid]) != id)) {
+                    if (hints[spouseid,2] == 0) hints[spouseid,2] <- -id
+                    else                        hints[id,2] <- spouseid
 		
-		family <- plist$fam[lev,spouse.x]
-		if (family > 0) {
-		    sibs <- match(plist$fam[lev,], family, nomatch=0)
-		    sibs <- idlist[sibs>0]
-		    hints[,1] <- shift(spouseid, sibs, T, hints[,1],
+                    family <- plist$fam[lev,spouse.x]
+                    if (family > 0) {
+                        sibs <- match(plist$fam[lev,], family, nomatch=0)
+                        sibs <- idlist[sibs>0]
+                        hints[,1] <- shift(spouseid, sibs, T, hints[,1],
 				                twinrel, twinset)
-		    }
+                        }
+                    }
 		}
+            # Block 3 - take care of the third, fourth, etc instances of "id"
+            #   on the same line.  
+            # No block 3 code has been written!  Why?  This case only tends to
+            #   occur in very complex families, e.g., animals, and in pedigrees
+            #   with that level of interconnect the resultant plot is going to
+            #   look like spagetti no matter what we do.
 	    }
         #
         # Recompute, since this shifts things on levels below
@@ -241,14 +261,6 @@ autohint <- function(ped) {
 	}
     dimnames(hints) <- list(NULL, NULL)
 
-    # One last bit of cleanup:
-    #  If there are triple, quad, etc marriages, I may have listed a male
-    #  as the spouse hint of a male or female as female (when two males are
-    #  side by side with a line between them, or two females).
-    # Throw away any such hints
-    has.hint <- (1:n)[hints[,2] !=0]
-    bad.hint <- (ped$sex[has.hint] == ped$sex[abs(hints[has.hint,2])])
-    if (any(bad.hint)) hints[has.hint[bad.hint],2] <- 0
-
-    hints
-    }
+    # Cleanup
+    check.hint(hints, ped$sex)
+}

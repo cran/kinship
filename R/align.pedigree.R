@@ -1,4 +1,4 @@
-# $Id: align.pedigree.s,v 1.1 2003/02/05 00:08:42 atkinson Exp $ 
+# $Id: align.pedigree.s,v 1.3 2007/12/12 23:13:23 therneau Exp $ 
 #
 # This routine returns a matrix of positions for either a packed or
 #   spread out pedigree.
@@ -30,6 +30,7 @@
 align.pedigree <- function(ped, packed=T, hints=ped$hints, width=6, align=T) {
     n <- length(ped$depth)
     if (ncol(hints) !=2 || nrow(hints) != n) stop("Invalid hints matrix")
+    hints <- check.hint(hints, ped$sex)
     
     # all the work will be done with "row number" as the id variable
     nid <- 1:n
@@ -37,16 +38,8 @@ align.pedigree <- function(ped, packed=T, hints=ped$hints, width=6, align=T) {
     mom<- match(ped$momid, ped$id, nomatch=0) 
     level <- ped$depth +1
 
-    horder <- hints[,1]
+    horder <- hints[,1]   # relative order of siblings within a family
     sorder <- hints[,2]   # -x = id of left spouse, +x = id of right
-    # Fill out sorder to make it easier for some of called routines
-    # If subject i shows j as a spouse, hints[i,2] = j or -j, and
-    #   hints[j,2] = 0 (is unused), then set hints[j,2] to i or -i.
-    has.spouse <- (sorder !=0)
-    spouse <- ifelse(has.spouse, abs(sorder), NA)
-    ok.to.fill <- (has.spouse & sorder[spouse]==0)
-    fillval <- -(1:n) * sign(sorder)
-    sorder[spouse[ok.to.fill]] <- fillval[ok.to.fill]
 
     # Currently, the alignment routine requires that you have either
     #  0 parents or 2 parents, not 1.
@@ -73,7 +66,7 @@ align.pedigree <- function(ped, packed=T, hints=ped$hints, width=6, align=T) {
 	}
 
     hash <- hash[!duplicated(hash)]   #eliminate duplicates
-    hash <- hash -1  
+    hash <- hash -1                   #change to range of 0 to n-1 (for %%)
     spouselist <- rbind(1+ hash%%n, floor(hash/n))  # uncompress it
     assign('spouselist', spouselist, envir=as.environment(sys.frame()))
 
@@ -163,3 +156,4 @@ align.pedigree <- function(ped, packed=T, hints=ped$hints, width=6, align=T) {
     else list(n=rval$n, nid=nid, pos=pos, fam=rval$fam, spouse=spouse, 
               twins=twins)
     }
+

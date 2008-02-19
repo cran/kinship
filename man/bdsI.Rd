@@ -29,7 +29,6 @@ an identity matrix.
 \examples{
 imat <- bdsI(1:10)
 }
-}
 \keyword{array}
 % docclass is function
 % Converted by Sd2Rd version 1.21.

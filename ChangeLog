@@ -42,6 +42,9 @@
 30/05/2007 export S3 methods in NAMESPACE, change sys.frame(sys.parents()) back to sys.parent() in coxme and lmekin
 31/05/2007 add Wald test for fixed effects in print.lmekin as suggested by Qiong Yang
 07/06/2007 add affected==2 in !all(affected=0 | affected==1) of plot.pedigree
+22/10/2007 change License to GPL (>=2) following Kurt Hornik's e-mail
+13/12/2207 update align.pedigree.s, autohint.s, check.hint.s from S by Terry Therneau for baboon.pre from Jinliang Wang
+19/02/2008 an updated documentation from http://mayoresearch.mayo.edu/mayo/research/biostat/upload/kinship.pdf
 
 1. documented or obvious
 
