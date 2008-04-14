@@ -33,5 +33,5 @@
 ** "integers" are int.  In S they are long.
 */
 #ifndef Sint
-#define Sint long 
+#define Sint int
 #endif

@@ -1,4 +1,4 @@
 .onLoad <- function(lib, pkg)
 {
-    require("methods", quietly = TRUE)
+    print("kinship is loaded")
 }

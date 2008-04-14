@@ -296,7 +296,7 @@ coxme.fit <- function(x, y, strata, offset, init, control,
                as.double(control$toler.chol),
                as.double(control$eps),
                as.integer(control$sparse.calc),
-               copy=c(F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,T,T,F,F,F), PACKAGE="kinship")
+               copy=c(F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,T,T,F,F,F,F), PACKAGE="kinship")
     means   <- ifit$means
     scale   <- ifit$scale
 

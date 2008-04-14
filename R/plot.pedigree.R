@@ -23,7 +23,7 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
     if(is.null(status))
       status <- rep(0, n)
     else {
-	if(!all(status == 0 | status == 1))
+	if(!all(status == 0 | status == 1 | status == 2))
 	  stop("Invalid status code")
 	if(length(status) != n)
 	  stop("Wrong length for status")
