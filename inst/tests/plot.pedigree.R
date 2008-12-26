@@ -5,8 +5,8 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 			  cex = 1, col = rep(1, length(x$id)), 
 			  symbolsize = 1, branch = 0.6, 
 			  packed = T, align = packed, width = 8, 
-			  density=c(-1, 50,70,90), mar=c(4.1, 1, 4.1, 1),
-			  angle=c(90,70,50,0), keep.par=F, ...)
+			  density=c(5, 0, 100, 50), mar=c(4.1, 1, 4.1, 1),
+			  angle=c(90, 70, 50, 0), keep.par=F, ...) # density = c(-1, 50, 70, 90)
 {
     maxlev <- max(x$depth) + 1
     n <- length(x$depth)	
@@ -95,11 +95,11 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 		y <- cos(z) * r * 1/adj + cy
 
 		if(sum(code,na.rm=T)==0) polygon(x, y, border=T, 
-			density=0,col=col, ...)
+			density=density[1],col=col, ...) #density=0
 		else {
 
 		    if(length(code)==1) polygon(x,y,border=T,col=col,
-			       density=density[1], angle=angle[1],...)
+			       density=density[code[1]+1], angle=angle[1],...) #density[1]
 
 		    if(length(code)==2) {
 			polygon(x,y,border=T,density=0, ...)
@@ -107,14 +107,14 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 			x <- sin(z) * r + cx
 			y <- cos(z) * r * 1/adj + cy
 
-			polygon(x,y,border=T,col=col,density=density[2]*code[2],
-				angle=angle[2], ...)
+			polygon(x,y,border=T,col=col,density=density[code[2]+1],
+				angle=angle[2], ...) # density[2]*code[2]
 			z <- (180:360 * pi)/180
 			x <- sin(z) * r + cx
 			y <- cos(z) * r * 1/adj + cy
 
-			polygon(x,y,border=T,col=col,density=code[1]*density[1],
-				angle=angle[1], ...)
+			polygon(x,y,border=T,col=col,density=density[code[1]+1],
+				angle=angle[1], ...) # code[1]*density[1]
 		    }
 
 		    if(length(code)==3) {
@@ -123,20 +123,20 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 			z <- (0:90 * pi)/180
 			x <- c(cx,sin(z) * r + cx)
 			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[3]*density[3],
-				angle=angle[3],...)
+			polygon(x,y,border=T,col=col,density=density[code[3]+1],
+				angle=angle[3],...) # code[3]*density[3]
 
 			z <- (180:270 * pi)/180
 			x <- c(cx,sin(z) * r + cx)
 			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[1]*density[1],
-				angle=angle[1], ...)
+			polygon(x,y,border=T,col=col,density=density[code[1]+1],
+				angle=angle[1], ...) # code[1]*density[1]
 
 			z <- (270:360 * pi)/180
 			x <- c(cx, sin(z) * r + cx)
 			y <- c(cy, cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[2]*density[2],
-				angle=angle[2], ...)
+			polygon(x,y,border=T,col=col,density=density[code[2]+1],
+				angle=angle[2], ...) # code[2]*density[2]
 		    }
 
 		    if(length(code)==4) {
@@ -145,26 +145,26 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 			z <- (0:90 * pi)/180
 			x <- c(cx,sin(z) * r + cx)
 			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[3]*density[3],
-				angle=angle[3], ...)
+			polygon(x,y,border=T,col=col,density=density[code[3]+1],
+				angle=angle[3], ...) # code[3]*density[3]
 
 			z <- (90:180 * pi)/180
 			x <- c(cx,sin(z) * r + cx)
 			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[4]*density[4], 
-				angle=angle[4],...)
+			polygon(x,y,border=T,col=col,density=density[code[4]+1], 
+				angle=angle[4],...) # code[4]*density[4]
 
 			z <- (180:270 * pi)/180
 			x <- c(cx,sin(z) * r + cx)
 			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[1]*density[1],
-				angle=angle[1], ...)
+			polygon(x,y,border=T,col=col,density=density[code[1]+1],
+				angle=angle[1], ...) # code[1]*density[1]
 
 			z <- (270:360 * pi)/180
 			x <- c(cx, sin(z) * r + cx)
 			y <- c(cy, cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[2]*density[2],
-				angle=angle[2], ...)
+			polygon(x,y,border=T,col=col,density=density[code[2]+1],
+				angle=angle[2], ...) # code[2]*density[2]
 		    }
 
 		    if(length(code)>4) stop('Can only plot up to 4 levels of codes')
@@ -183,56 +183,56 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 	      x <- cx + c(-r,-r,r,r)
 	      y <- cy + (1/adj)*c(-r,r,r,-r)
 
-	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=0, col=col,...)
+	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=density[1], col=col,...) # density=0
 	      else {
 		  if(length(code)==1) polygon(x,y,border=T,col=col,
-			     density=density[1], angle=angle[1], ...)
+			     density=density[code[1]+1], angle=angle[1], ...) # density[1]
 
 		  if(length(code)==2) {
 		      polygon(x,y,border=T,density=0, ...)
 		      
 		      x <- cx + c(-r,-r,0,0)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(0,0,r,r)
-		      polygon(x,y,border=T,col=col,density=density[2]*code[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # density[2]*code[2]
 		  }
 		  if(length(code)==3) {
 		      polygon(x,y,border=T,density=0, ...)
 		      
 		      x <- cx + c(-r,-r,0,0)
 		      y <- cy + (1/adj)*c(-r,0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(-r,-r,0,0)
 		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # code[2]*density[2]
 		      x <- cx + c(0,0,r,r)
 		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=density[3]*code[3],
-			      angle[3], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[3]+1],
+			      angle[3], ...) # code[3]*density[3]
 		  }
 		  if(length(code)==4) {
 		      polygon(x,y,border=T,density=0, ...)
 		      
 		      x <- cx + c(-r,-r,0,0)
 		      y <- cy + (1/adj)*c(-r,0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(-r,-r,0,0)
 		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # code[2]*density[2]
 		      x <- cx + c(0,0,r,r)
 		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=code[3]*density[3],
-			      angle=angle[3], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[3]+1],
+			      angle=angle[3], ...) # code[3]*density[3]
 		      x <- cx + c(0,0,r,r)
 		      y <- cy + (1/adj)*c(-r,0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[4]*density[4],
-			      angle[4], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[4]+1],
+			      angle[4], ...) # code[4]*density[4]
 		  }
 		  if(length(code)>4) stop('Can only plot up to 4 levels of codes')
 	      }  
@@ -250,58 +250,58 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 	      x <- cx + c(-r,0,r,0)
 	      y <- cy + (1/adj)*c(0,r,0,-r)
 
-	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=0,col=col, ...)
+	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=density[1],col=col, ...) # density=0
 	      else {
 		  if(length(code)==1) polygon(x,y,border=T,col=col,
-			     density=density[1], angle=angle[1], ...)
+			     density=density[code[1]+1], angle=angle[1], ...) # density[1]
 
 		  if(length(code)==2) {
 		      polygon(x,y,border=T,density=0, ...)
 		      
 		      x <- cx + c(-r,0,0)
 		      y <- cy + (1/adj)*c(0,r,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(0,0,r)
 		      y <- cy + (1/adj)*c(r,-r,0)
-		      polygon(x,y,border=T,col=col,density=density[2]*code[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # code[2]*density[2]
 		  }
 		  if(length(code)==3) {
 		      polygon(x,y,border=T,density=0, ...)
 		      
 		      x <- cx + c(-r,0,0)
 		      y <- cy + (1/adj)*c(0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(-r,0,0)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # code[2]*density[2]
 		      x <- cx + c(0,0,r)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=density[3]*code[3],
-			      angle=angle[3], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[3]+1],
+			      angle=angle[3], ...) # code[3]*density[3]
 		  }
 		  if(length(code)==4) {
 		      polygon(x,y,border=T,density=0, ...)
 		      
 		      x <- cx + c(-r,0,0)
 		      y <- cy + (1/adj)*c(0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(-r,0,0)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # code[2]*density[2]
 		      x <- cx + c(0,0,r)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[3]*density[3],
-			      angle=angle[3], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[3]+1],
+			      angle=angle[3], ...) # code[3]*density[3]
 		      x <- cx + c(0,0,r)
 		      y <- cy + (1/adj)*c(-r,0,0)
-		      polygon(x,y,border=T,col=col,density=code[4]*density[4],
-			      angle=angle[4], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[4]+1],
+			      angle=angle[4], ...) # code[4]*density[4]
 		  }
 		  if(length(code)>4) stop('Can only plot up to 4 levels of codes')
 	      }  
@@ -324,23 +324,23 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 	      x <- cx + c((-1/2)*a, (1/2)*a, 0)
 	      y <- cy + (1/adj)*c(-b, -b, r)
 
-	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=0,col=col, ...)
+	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=density[1],col=col, ...) # density=0
 	      else {
 		  if(length(code)==1) polygon(x,y,border=T,col=col,
-			     density=density[1],angle=angle[1], ...)
+			     density=density[code[1]+1],angle=angle[1], ...) # density[1]
 
 		  if(length(code)==2) {
 		      polygon(x,y,border=T,density=0, ...)
 		      
 		      x <- cx + c((-1/2)*a, 0, 0)
 		      y <- cy + (1/adj)*c(-b, -b, r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      
 		      x <- cx + c(0, (1/2)*a, 0)
 		      y <- cy + (1/adj)*c(-b, -b, r)
-		      polygon(x,y,border=T,col=col,density=density[2]*code[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # code[2]*density[2]
 		  }
 
 		  if(length(code)==3) {
@@ -349,16 +349,16 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 
 		      x <- cx + c((-1/2)*a,-midx, 0, 0)
 		      y <- cy + (1/adj)*c(-b, 0, 0, -b)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(-midx, 0,0)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+1],
+			      angle=angle[2], ...) # code[2]*density[2]
 		      x <- cx + c(0,0,midx)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=density[3]*code[3],
-			      angle=angle[3],...)
+		      polygon(x,y,border=T,col=col,density=density[code[3]+1],
+			      angle=angle[3],...) # code[3]*density[3]
 		  }
 		  if(length(code)==4) {
 		      polygon(x,y,border=T,density=0, ...)
@@ -366,20 +366,20 @@ plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status,
 		      
 		      x <- cx + c((-1/2)*a, -midx , 0, 0)
 		      y <- cy + (1/adj)*c(-b, 0, 0, -b)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[1]+1],
+			      angle=angle[1], ...) # code[1]*density[1]
 		      x <- cx + c(-midx, 0,0)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[2]+2],
+			      angle=angle[2], ...) # code[2]*density[2]
 		      x <- cx + c(0,0,midx)
 		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[3]*density[3],
-			      angle=angle[3], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[3]+1],
+			      angle=angle[3], ...) # code[3]*density[3]
 		      x <- cx + c(0,midx,(1/2)*a,0)
 		      y <- cy + (1/adj)*c(0,0,-b,-b)
-		      polygon(x,y,border=T,col=col,density=code[4]*density[4],
-			      angle=angle[4], ...)
+		      polygon(x,y,border=T,col=col,density=density[code[4]+1],
+			      angle=angle[4], ...) # code[4]*density[4]
 		  }
 		  if(length(code)>4) stop('Can only plot up to 4 levels of codes')
 	      }  

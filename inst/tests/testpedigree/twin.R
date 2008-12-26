@@ -1,4 +1,4 @@
-library(genetics)
+library(kinship)
 
 #source(tilde('~atkinson/research/kinship/plot.pedigree.s'))
 #source('../plot.pedigree.s')

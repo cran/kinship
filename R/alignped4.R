@@ -181,8 +181,32 @@ alignped4 <- function(rval, spouse, level, iter, width=2) {
 	    temp3 <- temp1
 	    for (i in 1:length(temp3)) {
 		lower.limit <- temp1[i]
-		temp3[i] <- sum(temp2[temp1<lower.limit]) +
-			sum(temp2[temp1>(lower.limit + width)])
+###############
+##Begin patch##
+###############
+tmp_var1 <- (temp1 < lower.limit)
+tmp_var2 <- (temp1 > (lower.limit + width))
+        if( length(tmp_var1) > 0 )
+        {
+        tmp_summand_1 <- sum(temp2[tmp_var1], na.rm=TRUE)
+        }
+        else
+        {
+        tmp_summand_1 <- 0
+        }
+        if( length( tmp_var2) > 0 )
+        {
+        tmp_summand_2 <- sum(temp2[tmp_var2], na.rm=TRUE)
+        }
+        else
+        {
+        tmp_summand_2 <- 0
+        }
+                        #temp3[i] <- sum(temp2[temp1 < lower.limit]) + sum(temp2[temp1 > (lower.limit + width)])
+                        temp3[i] <- tmp_summand_1 + tmp_summand_2
+#############
+##End Patch##
+#############
 		}
 	    pos[realval] <- pos[realval] - mean(temp1[temp3==min(temp3)])
 	    }

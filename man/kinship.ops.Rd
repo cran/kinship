@@ -23,5 +23,4 @@
 \title{Basic Linear Algebra for classes bdsmatrix and gchol.bdsmatrix}
 \description{Basic linear algebra operators for class \code{bdsmatrix} and 
 \code{gchol.bdsmatrix}}
-\usage{ }
 \keyword{algebra}

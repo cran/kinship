@@ -32,22 +32,18 @@ pedigree <- function(id, dadid, momid, sex, affected, status, relations) {
     father <- match(dadid, id, nomatch = 0)
     if(any(sex[father] != "male")) {
 	who <- unique((id[father])[sex[father] != "male"])
-	stop(paste("Id not male, but is a father:", paste(who, collapse
-							  = " ")))
+	stop(paste("Id not male, but is a father:", paste(who, collapse = " ")))
 	}
 
     mother <- match(momid, id, nomatch = 0)
     if(any(sex[mother] != "female")) {
 	who <- unique((id[mother])[sex[mother] != "female"])
-	stop(paste("Id not female, but is a mother:", paste(who, 
-							    collapse = " ")))
+	stop(paste("Id not female, but is a mother:", paste(who, collapse = " ")))
 	}
-
 
     # Paste the data together into the skeleton of a pedigree
     depth <- kindepth(id, momid, dadid, align = T)
-    temp <- list(id = id, momid = momid, dadid = dadid, sex = sex, depth = 
-		 depth)
+    temp <- list(id = id, momid = momid, dadid = dadid, sex = sex, depth = depth)
 
     # More data checks -- do these if affected/status/relations are filled in
     #   (the optional parts of a pedigree structure)
@@ -61,9 +57,10 @@ pedigree <- function(id, dadid, momid, sex, affected, status, relations) {
 		stop("Wrong length for affected")
 
 	    if (is.logical(affected)) affected <- as.numeric(affected)
-	    if (is.factor(affected))  affected <- as.numeric(affected) -1
+	    if (is.factor(affected))  affected <- as.numeric(affected) - 1
 	    }
-	if(max(affected) >min(affected)) affected <- affected - min(affected)
+	if(max(affected) > min(affected)) affected <- affected - min(affected)
+        else if (max(affected) == min(affected)) affected <- affected - 1
 	if (!all(affected==0 | affected==1 | affected==2))
 		stop("Invalid code for affected status")
 	temp$affected <- affected

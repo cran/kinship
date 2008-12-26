@@ -18,7 +18,6 @@ data2 <- read.table("test2.dat",
                     col.names=c("pedid", "id", "father", 
                       "mother", "sex", "status", "dead", "proband"))
 
-
 fun2 <- function(i, ...) {
     temp <- data2[data2$pedid==i,]
     ptemp <- pedigree(temp$id, dadid=temp$father, momid=temp$mother, temp$sex,
@@ -34,7 +33,6 @@ fun2(2)  #should be able to straighten the connections more
          # (The springs are oscillating, plot(..., width=7) is perfect)
 fun2(3)  # autohint not quite smart enough
 fun2(4)  
-
 
 ## CREATE SOME INTERESTING PEDIGREES TO TRY AND STUMP THE FUNCTIONS
 
@@ -122,7 +120,7 @@ title('Test4.dat: Move subjects 5 & 7')
 
 # (The default hints in a pedigree are always between 1 and #siblings).
 
-ped1$hints[ped1$id==15,1] <- .1    #Now make #15 leftmost in his family
+ped1$hints[ped1$id==15,1] <- .1   # Now make #15 leftmost in his family
 ped1$hints[ped1$id==13,1] <- 100  # and #13 rightmost
 plot(ped1)
 title('Test4.dat: Move subjects 15 & 13')
@@ -142,4 +140,3 @@ plot(ped5.2)
 title('Test5.dat, family 71: 2-level loop (different generations')
 
 dev.off()
-
