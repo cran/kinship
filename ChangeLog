@@ -1,5 +1,9 @@
+25/08/2009 replace \ldots with \dots in function arguments of coxme, plot.pedigree,
+	   solve.bdsmatrix/solve.gchol/solve.gchol.bdsmatrix
+30/12/2008 test of plot.pedigree under Linux R 2.8.1 so add requirement for this version
 25/12/2008 apply a patch to alignped4 as suggested by Stuart Horswell <stuart.horswell@csc.mrc.ac.uk>
 	   modify plot.pedigree to accommodate plotting of twins
+	   recall releasep.pdf to inst/doc
 24/12/2008 tac dated changes and toggle Imports/Depentds for methods in DESCRIPTION/NAMESPACE
 10/06/2008 change max(affected)>min(affected) in pedigree() according to Liping Hou [houliping@gmail.com]
 09/06/2008 add importFrom() as suggested by CRAN check

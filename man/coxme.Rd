@@ -14,7 +14,7 @@ fitted model.
 coxme(fixed, data=parent.frame(), random, 
    weights, subset, na.action, init, control, 
    ties=c("efron", "breslow", "exact"), singular.ok=T, 
-   varlist, variance, vinit=.2, sparse=c(50, .02), rescale=T, pdcheck=T, x=F, y=T, shortlabel=T, \ldots)
+   varlist, variance, vinit=.2, sparse=c(50, .02), rescale=T, pdcheck=T, x=F, y=T, shortlabel=T, \dots)
 }
 \arguments{
 \item{fixed}{

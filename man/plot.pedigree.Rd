@@ -10,7 +10,7 @@ plot objects created with the function pedigree
 \method{plot}{pedigree}(x, id=x$id, sex=x$sex, status=x$status,
 affected=x$affected, cex=1, col=rep(1, length(x$id)),
 symbolsize=1, branch=0.6, packed=T, align=packed, width=8, density=c(-1, 50,70,90),
-mar=c(4.1,1,4.1,1), angle=c(90, 70, 50, 0), keep.par=F, \ldots)
+mar=c(4.1,1,4.1,1), angle=c(90, 70, 50, 0), keep.par=F, \dots)
 }
 \arguments{
 \item{x}{
