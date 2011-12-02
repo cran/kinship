@@ -1,659 +1,332 @@
-#  $Id: plot.pedigree.s,v 1.10 2003/10/24 14:13:34 Atkinson Exp $
-
-plot.pedigree <- function(x, id = x$id, sex = x$sex, status = x$status, 
-			  affected = x$affected, 
-			  cex = 1, col = rep(1, length(x$id)), 
-			  symbolsize = 1, branch = 0.6, 
-			  packed = T, align = packed, width = 8, 
-			  density=c(-1, 50,70,90), mar=c(4.1, 1, 4.1, 1),
-			  angle=c(90,70,50,0), keep.par=F, ...)
+# Automatically generated from all.nw using noweb
+plot.pedigree <- function(x, id = x$id, status = x$status, 
+                          affected = x$affected, 
+                          cex = 1, col = 1,
+                          symbolsize = 1, branch = 0.6, 
+                          packed = TRUE, align = c(1.5,2), width = 8, 
+                          density=c(-1, 35,55,25), mar=c(4.1, 1, 4.1, 1),
+                          angle=c(90,65,40,0), keep.par=FALSE,
+                          subregion, ...)
 {
-    maxlev <- max(x$depth) + 1
-    n <- length(x$depth)	
-
-
-    ## DATA CHECKS 
-    sex <- as.numeric(sex)
-    sex[is.na(sex)] <- 3
-    if(any(sex < 1 | sex > 4))
-      stop("Invalid sex code")
-    if(length(sex) != n)
-      stop("Wrong length for sex")
-
+    Call <- match.call()
+    n <- length(x$id)        
     if(is.null(status))
       status <- rep(0, n)
     else {
-	if(!all(status == 0 | status == 1 | status == 2))
-	  stop("Invalid status code")
-	if(length(status) != n)
-	  stop("Wrong length for status")
+        if(!all(status == 0 | status == 1))
+          stop("Invalid status code")
+        if(length(status) != n)
+          stop("Wrong length for status")
     }
-    if(!is.null(id)) {
-	if(length(id) != n)
-	  stop("Wrong length for id")
+    if(!missing(id)) {
+        if(length(id) != n)
+          stop("Wrong length for id")
     }
-
-    ## if someone has an unknown affected status, assign them 
-    ## a value of 0 (not affected)
-
-    # More data checks -- do these if affected/status/relations are filled in
-    #   (the optional parts of a pedigree structure)
-
     if(is.null(affected)){
       affected <- matrix(0,nrow=n)
     }
     else {
-	if (is.matrix(affected)){
-	    if (nrow(affected) != n) stop("Wrong number of rows in affected")
-	    if (is.logical(affected)) affected <- 1* affected
-	    } 
-	else {
-	    if (length(affected) != n)
-		stop("Wrong length for affected")
+        if (is.matrix(affected)){
+            if (nrow(affected) != n) stop("Wrong number of rows in affected")
+            if (is.logical(affected)) affected <- 1* affected
+            if (ncol(affected) > length(angle) || ncol(affected) > length(density))
+                stop("More columns in the affected matrix than angle/density values")
+            } 
+        else {
+            if (length(affected) != n)
+                stop("Wrong length for affected")
 
-	    if (is.logical(affected)) affected <- as.numeric(affected)
-	    if (is.factor(affected))  affected <- as.numeric(affected) - 1
-	    }
-	if(max(affected) > min(affected)) 
-              affected <- matrix(affected - min(affected),nrow=n)
-        else
-              affected <- matrix(affected,nrow=n)
-	if (!all(affected==0 | affected==1 | affected==2))
-		stop("Invalid code for affected status")
-	}
-  
-    if(!missing(status)) {
-	if(length(status) != n)
-		stop("Wrong length for affected")
-	if(any(status != 0 & status != 1))
-		stop("Invalid status code")
-	}
-
-    
-    ## Define plotting symbols for sex by affected
-    ## in S, 0=square, 1= circle, 5=diamond, 2=triangle
-    ## 15, 16, 18 and 17 are filled versions of them
-
-    symbol <-  c(0, 1, 5, 2)[sex]
-
-    ## CREATE SYMBOLS/PLOTS
-
-    points.sym <- function(x, y, symbol, status, affected, size, col, aspect,
-			   angle, density, adj)
-      {
-
-	  circle <- function(cx, cy, r, code=0, col=1, angle, density, ...)
-	    {
-
-		#   cx, cy, coordinates for center; r is radius
-
-		z <- (0:360 * pi)/180
-		pin <- par()$pin
-		usr <- par()$usr
-		adj <- (pin[2]/pin[1])/((usr[4] - usr[3])/(usr[2] - usr[1]))
-		x <- sin(z) * r + cx
-		y <- cos(z) * r * 1/adj + cy
-
-		if(sum(code,na.rm=T)==0) polygon(x, y, border=T, 
-			density=0,col=col, ...)
-		else {
-
-		    if(length(code)==1) polygon(x,y,border=T,col=col,
-			       density=density[1], angle=angle[1],...)
-
-		    if(length(code)==2) {
-			polygon(x,y,border=T,density=0, ...)
-			z <- (0:180 * pi)/180
-			x <- sin(z) * r + cx
-			y <- cos(z) * r * 1/adj + cy
-
-			polygon(x,y,border=T,col=col,density=density[2]*code[2],
-				angle=angle[2], ...)
-			z <- (180:360 * pi)/180
-			x <- sin(z) * r + cx
-			y <- cos(z) * r * 1/adj + cy
-
-			polygon(x,y,border=T,col=col,density=code[1]*density[1],
-				angle=angle[1], ...)
-		    }
-
-		    if(length(code)==3) {
-			polygon(x,y,border=T,density=0, ...)
-			
-			z <- (0:90 * pi)/180
-			x <- c(cx,sin(z) * r + cx)
-			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[3]*density[3],
-				angle=angle[3],...)
-
-			z <- (180:270 * pi)/180
-			x <- c(cx,sin(z) * r + cx)
-			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[1]*density[1],
-				angle=angle[1], ...)
-
-			z <- (270:360 * pi)/180
-			x <- c(cx, sin(z) * r + cx)
-			y <- c(cy, cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[2]*density[2],
-				angle=angle[2], ...)
-		    }
-
-		    if(length(code)==4) {
-			polygon(x,y,border=T,density=0, ...)
-			
-			z <- (0:90 * pi)/180
-			x <- c(cx,sin(z) * r + cx)
-			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[3]*density[3],
-				angle=angle[3], ...)
-
-			z <- (90:180 * pi)/180
-			x <- c(cx,sin(z) * r + cx)
-			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[4]*density[4], 
-				angle=angle[4],...)
-
-			z <- (180:270 * pi)/180
-			x <- c(cx,sin(z) * r + cx)
-			y <- c(cy,cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[1]*density[1],
-				angle=angle[1], ...)
-
-			z <- (270:360 * pi)/180
-			x <- c(cx, sin(z) * r + cx)
-			y <- c(cy, cos(z) * r * 1/adj + cy)
-			polygon(x,y,border=T,col=col,density=code[2]*density[2],
-				angle=angle[2], ...)
-		    }
-
-		    if(length(code)>4) stop('Can only plot up to 4 levels of codes')
-		}  
-		invisible()
-	    }
-
-	  square <- function(cx, cy, r, code=0, col=1, angle, density, ...) {
-
-	      #  cx, cy, coordinates for center; r is radius
-
-	      pin <- par()$pin
-	      usr <- par()$usr
-	      adj <- (pin[2]/pin[1])/((usr[4] - usr[3])/(usr[2] - usr[1]))
-	      
-	      x <- cx + c(-r,-r,r,r)
-	      y <- cy + (1/adj)*c(-r,r,r,-r)
-
-	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=0, col=col,...)
-	      else {
-		  if(length(code)==1) polygon(x,y,border=T,col=col,
-			     density=density[1], angle=angle[1], ...)
-
-		  if(length(code)==2) {
-		      polygon(x,y,border=T,density=0, ...)
-		      
-		      x <- cx + c(-r,-r,0,0)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(0,0,r,r)
-		      polygon(x,y,border=T,col=col,density=density[2]*code[2],
-			      angle=angle[2], ...)
-		  }
-		  if(length(code)==3) {
-		      polygon(x,y,border=T,density=0, ...)
-		      
-		      x <- cx + c(-r,-r,0,0)
-		      y <- cy + (1/adj)*c(-r,0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(-r,-r,0,0)
-		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
-		      x <- cx + c(0,0,r,r)
-		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=density[3]*code[3],
-			      angle[3], ...)
-		  }
-		  if(length(code)==4) {
-		      polygon(x,y,border=T,density=0, ...)
-		      
-		      x <- cx + c(-r,-r,0,0)
-		      y <- cy + (1/adj)*c(-r,0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(-r,-r,0,0)
-		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
-		      x <- cx + c(0,0,r,r)
-		      y <- cy + (1/adj)*c(0,r,r,0)
-		      polygon(x,y,border=T,col=col,density=code[3]*density[3],
-			      angle=angle[3], ...)
-		      x <- cx + c(0,0,r,r)
-		      y <- cy + (1/adj)*c(-r,0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[4]*density[4],
-			      angle[4], ...)
-		  }
-		  if(length(code)>4) stop('Can only plot up to 4 levels of codes')
-	      }  
-	      invisible()
-	  }
-
-	  diamond <- function(cx, cy, r, code=0, col=1, angle, density, ...) {
-
-	      #  cx, cy, coordinates for center; r is radius
-
-	      pin <- par()$pin
-	      usr <- par()$usr
-	      adj <- (pin[2]/pin[1])/((usr[4] - usr[3])/(usr[2] - usr[1]))
-	      
-	      x <- cx + c(-r,0,r,0)
-	      y <- cy + (1/adj)*c(0,r,0,-r)
-
-	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=0,col=col, ...)
-	      else {
-		  if(length(code)==1) polygon(x,y,border=T,col=col,
-			     density=density[1], angle=angle[1], ...)
-
-		  if(length(code)==2) {
-		      polygon(x,y,border=T,density=0, ...)
-		      
-		      x <- cx + c(-r,0,0)
-		      y <- cy + (1/adj)*c(0,r,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(0,0,r)
-		      y <- cy + (1/adj)*c(r,-r,0)
-		      polygon(x,y,border=T,col=col,density=density[2]*code[2],
-			      angle=angle[2], ...)
-		  }
-		  if(length(code)==3) {
-		      polygon(x,y,border=T,density=0, ...)
-		      
-		      x <- cx + c(-r,0,0)
-		      y <- cy + (1/adj)*c(0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(-r,0,0)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
-		      x <- cx + c(0,0,r)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=density[3]*code[3],
-			      angle=angle[3], ...)
-		  }
-		  if(length(code)==4) {
-		      polygon(x,y,border=T,density=0, ...)
-		      
-		      x <- cx + c(-r,0,0)
-		      y <- cy + (1/adj)*c(0,0,-r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(-r,0,0)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
-		      x <- cx + c(0,0,r)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[3]*density[3],
-			      angle=angle[3], ...)
-		      x <- cx + c(0,0,r)
-		      y <- cy + (1/adj)*c(-r,0,0)
-		      polygon(x,y,border=T,col=col,density=code[4]*density[4],
-			      angle=angle[4], ...)
-		  }
-		  if(length(code)>4) stop('Can only plot up to 4 levels of codes')
-	      }  
-	      invisible()
-	  }
-
-	  triangle <- function(cx, cy, r, code=0, col=1, angle, density, ...) {
-
-	      #  cx, cy, coordinates for center; r is radius
-
-	      pin <- par()$pin
-	      usr <- par()$usr
-	      adj <- (pin[2]/pin[1])/((usr[4] - usr[3])/(usr[2] - usr[1]))
-	      
-	      r <- r*1.25
-
-	      a <- 3*r/sqrt(3)
-	      b <- r/2
-
-	      x <- cx + c((-1/2)*a, (1/2)*a, 0)
-	      y <- cy + (1/adj)*c(-b, -b, r)
-
-	      if(sum(code,na.rm=T)==0) polygon(x,y,border=T,density=0,col=col, ...)
-	      else {
-		  if(length(code)==1) polygon(x,y,border=T,col=col,
-			     density=density[1],angle=angle[1], ...)
-
-		  if(length(code)==2) {
-		      polygon(x,y,border=T,density=0, ...)
-		      
-		      x <- cx + c((-1/2)*a, 0, 0)
-		      y <- cy + (1/adj)*c(-b, -b, r)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      
-		      x <- cx + c(0, (1/2)*a, 0)
-		      y <- cy + (1/adj)*c(-b, -b, r)
-		      polygon(x,y,border=T,col=col,density=density[2]*code[2],
-			      angle=angle[2], ...)
-		  }
-
-		  if(length(code)==3) {
-		      polygon(x,y,border=T,density=0, ...)
-		      midx <- (r*(.5)*a)/(b+r)
-
-		      x <- cx + c((-1/2)*a,-midx, 0, 0)
-		      y <- cy + (1/adj)*c(-b, 0, 0, -b)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(-midx, 0,0)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
-		      x <- cx + c(0,0,midx)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=density[3]*code[3],
-			      angle=angle[3],...)
-		  }
-		  if(length(code)==4) {
-		      polygon(x,y,border=T,density=0, ...)
-		      midx <- (r*(.5)*a)/(b+r)
-		      
-		      x <- cx + c((-1/2)*a, -midx , 0, 0)
-		      y <- cy + (1/adj)*c(-b, 0, 0, -b)
-		      polygon(x,y,border=T,col=col,density=code[1]*density[1],
-			      angle=angle[1], ...)
-		      x <- cx + c(-midx, 0,0)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[2]*density[2],
-			      angle=angle[2], ...)
-		      x <- cx + c(0,0,midx)
-		      y <- cy + (1/adj)*c(0,r,0)
-		      polygon(x,y,border=T,col=col,density=code[3]*density[3],
-			      angle=angle[3], ...)
-		      x <- cx + c(0,midx,(1/2)*a,0)
-		      y <- cy + (1/adj)*c(0,0,-b,-b)
-		      polygon(x,y,border=T,col=col,density=code[4]*density[4],
-			      angle=angle[4], ...)
-		  }
-		  if(length(code)>4) stop('Can only plot up to 4 levels of codes')
-	      }  
-	      invisible()
-	  }
-
-	  #   in S, 0=square, 1= circle, 5=diamond, 2=triangle
-	  #   15, 16, 18 and 17 are filled versions of them
-
-	  for(i in (1:length(x))[!is.na(match(symbol,c(0,15)))]){
-	      square(x[i],y[i],size, code=(affected[i,,drop=F]), 
-		     col=col[i], angle=angle, density=density)
-	  }
-
-	  for(i in (1:length(x))[!is.na(match(symbol,c(1,16)))]){
-	      circle(x[i],y[i],size, code=(affected[i,,drop=F]), 
-		     col=col[i],angle=angle, density=density)
-	  }
-
-	  for(i in (1:length(x))[!is.na(match(symbol,c(5,18)))]){
-	      diamond(x[i],y[i],size, code=(affected[i,,drop=F]), 
-		      col=col[i],angle=angle, density=density)
-	  }
-
-	  for(i in (1:length(x))[!is.na(match(symbol,c(2,17)))]){
-	      triangle(x[i],y[i],size, code=(affected[i,,drop=F]), 
-		       col=col[i],angle=angle, density=density)
-	  }
-
-
-          # Draw slash if status=1
-          who <- (status == 1)
-	  if(any(who)) {
-	      deltax <- size*cos(pi/4) + aspect
-	      deltay <- (1/adj)*(size*sin(pi/4) + aspect)
-	      segments(x[who] - deltax, y[who] - deltay,
-		       x[who] + deltax, y[who] + deltay)
-	  }
-      }
-      
-      #
-      # Now, get the structure of the plot, and lay out the main region
-      #
-	
-    plist <- align.pedigree(x, packed = packed, width = width, align = 
-			    align)
-    who <- (plist$nid > 0)
-    xp <- plist$pos[who]
-    yp <-  - (row(plist$nid))[who]
-    np <- plist$nid[who]
-    oldpar <- par(mar = mar, err=-1)
-    par(usr = c(range(xp) + c(-0.5, 0.5), - (maxlev + 0.5), -0.5))
-
-    pin <- par()$pin
-    usr <- par()$usr
-    adj <- (pin[2]/pin[1])/((usr[4] - usr[3])/(usr[2] - usr[1]))
-
-    symbolsize <- symbolsize * adj
-    radius <- 0.08 * symbolsize	
-
-    delta <- .1
-    aspect <- 0.05 * symbolsize  #used for status variable	
-
-#   textoff <- - (1/adj)*(radius) - .5*cex*(par()$"1em"[2])
-
-    textoff <- - (1/adj)*(radius) - .5*cex*(par()$"cin"[2]/7)
-
-    plot(xp,yp,axes=F,type='n',xlab='',ylab='',...)
-
-    points.sym(xp, yp, symbol[np], status[np], affected[np, ,drop=F], 
-	       radius, col[np], aspect, angle=angle, density=density, adj=adj)
-    if(!is.null(id)) {
-	text(xp, yp + textoff, id[np], cex = cex, col = col[np])
-	
+            if (is.logical(affected)) affected <- as.numeric(affected)
+            if (is.factor(affected))  affected <- as.numeric(affected) -1
+            }
+        if(max(affected, na.rm=TRUE) > min(affected, na.rm=TRUE)) {
+          affected <- matrix(affected - min(affected, na.rm=TRUE),nrow=n)
+          affected[is.na(affected)] <- -1
+        } else {
+          affected <- matrix(affected,nrow=n)
+        }
+        if (!all(affected==0 | affected==1 | affected == -1))
+                stop("Invalid code for affected status")
     }
 
-    # Draw in the family connections
+    if (length(col) ==1) col <- rep(col, n)
+    else if (length(col) != n) stop("Col argument must be of length 1 or n")
+    subregion2 <- function(plist, subreg) {
+        if (subreg[3] <1 || subreg[4] > length(plist$n)) 
+            stop("Invalid depth indices in subreg")
+        lkeep <- subreg[3]:subreg[4]
+        for (i in lkeep) {
+            if (!any(plist$pos[i,]>=subreg[1] & plist$pos[i,] <= subreg[2]))
+                stop(paste("No subjects retained on level", i))
+            }
+        
+        nid2 <- plist$nid[lkeep,]
+        n2   <- plist$n[lkeep]
+        pos2 <- plist$pos[lkeep,]
+        spouse2 <- plist$spouse[lkeep,]
+        fam2 <- plist$fam[lkeep,]
+        if (!is.null(plist$twins)) twin2 <- plist$twins[lkeep,]
+        
+        for (i in 1:nrow(nid2)) {
+            keep <- which(pos2[i,] >=subreg[1] & pos2[i,] <= subreg[2])
+            nkeep <- length(keep)
+            n2[i] <- nkeep
+            nid2[i, 1:nkeep] <- nid2[i, keep]
+            pos2[i, 1:nkeep] <- pos2[i, keep]
+            spouse2[i,1:nkeep] <- spouse2[i,keep]
+            fam2[i, 1:nkeep] <- fam2[i, keep]
+            if (!is.null(plist$twins)) twin2[i, 1:nkeep] <- twin2[i, keep]
+
+            if (i < nrow(nid2)) {  #look ahead
+                tfam <- match(fam2[i+1,], keep, nomatch=0)
+                fam2[i+1,] <- tfam
+                if (any(spouse2[i,tfam] ==0)) 
+                    stop("A subregion cannot separate parents")
+                }
+            }
+        
+        n <- max(n2)
+        out <- list(n= n2[1:n], nid=nid2[,1:n, drop=F], pos=pos2[,1:n, drop=F],
+                    spouse= spouse2[,1:n, drop=F], fam=fam2[,1:n, drop=F])
+        if (!is.null(plist$twins)) out$twins <- twin2[, 1:n, drop=F]
+        out
+        }
+    plist <- align.pedigree(x, packed = packed, width = width, align = align)
+    if (!missing(subregion)) plist <- subregion2(plist, subregion)
+    xrange <- range(plist$pos[plist$nid >0])
+    maxlev <- nrow(plist$pos)
+    frame()
+    oldpar <- par(mar=mar, xpd=TRUE)
+    psize <- par('pin')  # plot region in inches
+    stemp1 <- strwidth("ABC", units='inches', cex=cex)* 2.5/3
+    stemp2 <- strheight('1g', units='inches', cex=cex)
+    stemp3 <- max(strheight(id, units='inches', cex=cex))
+
+    ht1 <- psize[2]/maxlev - (stemp3 + 1.5*stemp2)
+    if (ht1 <=0) stop("Labels leave no room for the graph, reduce cex")
+    ht2 <- psize[2]/(maxlev + (maxlev-1)/2)
+    wd2 <- .8*psize[1]/(.8 + diff(xrange))
+
+    boxsize <- symbolsize* min(ht1, ht2, stemp1, wd2) # box size in inches
+    hscale <- (psize[1]- boxsize)/diff(xrange)  #horizontal scale from user-> inch
+    vscale <- (psize[2]-(stemp3 + stemp2/2 + boxsize))/ max(1, maxlev-1)
+    boxw  <- boxsize/hscale  # box width in user units
+    boxh  <- boxsize/vscale   # box height in user units
+    labh  <- stemp2/vscale   # height of a text string
+    legh  <- min(1/4, boxh  *1.5)  # how tall are the 'legs' up from a child
+    par(usr=c(xrange[1]- boxw/2, xrange[2]+ boxw/2, 
+              maxlev+ boxh+ stemp3 + stemp2/2 , 1))
+    circfun <- function(nslice, n=50) {
+        nseg <- ceiling(n/nslice)  #segments of arc per slice
+        
+        theta <- -pi/2 - seq(0, 2*pi, length=nslice +1)
+        out <- vector('list', nslice)
+        for (i in 1:nslice) {
+            theta2 <- seq(theta[i], theta[i+1], length=nseg)
+            out[[i]]<- list(x=c(0, cos(theta2)/2),
+                            y=c(0, sin(theta2)/2) + .5)
+            }
+        out
+        }
+    polyfun <- function(nslice, object) {
+        # make the indirect segments view
+        zmat <- matrix(0,ncol=4, nrow=length(object$x))
+        zmat[,1] <- object$x
+        zmat[,2] <- c(object$x[-1], object$x[1]) - object$x
+        zmat[,3] <- object$y
+        zmat[,4] <- c(object$y[-1], object$y[1]) - object$y
+
+        # Find the cutpoint for each angle
+        #   Yes we could vectorize the loop, but nslice is never bigger than
+        # about 10 (and usually <5), so why be obscure?
+        ns1 <- nslice+1
+        theta <- -pi/2 - seq(0, 2*pi, length=ns1)
+        x <- y <- double(ns1)
+        for (i in 1:ns1) {
+            z <- (tan(theta[i])*zmat[,1] - zmat[,3])/
+                (zmat[,4] - tan(theta[i])*zmat[,2])
+            tx <- zmat[,1] + z*zmat[,2]
+            ty <- zmat[,3] + z*zmat[,4]
+            inner <- tx*cos(theta[i]) + ty*sin(theta[i])
+            indx <- which(is.finite(z) & z>=0 &  z<=1 & inner >0)
+            x[i] <- tx[indx]
+            y[i] <- ty[indx]
+            }
+        nvertex <- length(object$x)
+        temp <- data.frame(indx = c(1:ns1, rep(0, nvertex)),
+                           theta= c(theta, object$theta),
+                           x= c(x, object$x),
+                           y= c(y, object$y))
+        temp <- temp[order(-temp$theta),]
+        out <- vector('list', nslice)
+        for (i in 1:nslice) {
+            rows <- which(temp$indx==i):which(temp$indx==(i+1))
+            out[[i]] <- list(x=c(0, temp$x[rows]), y= c(0, temp$y[rows]) +.5)
+            }
+        out
+        }   
+    if (ncol(affected)==1) {
+        polylist <- list(
+            square = list(list(x=c(-1, -1, 1,1)/2,  y=c(0, 1, 1, 0))),
+            circle = list(list(x=.5* cos(seq(0, 2*pi, length=50)),
+                               y=.5* sin(seq(0, 2*pi, length=50)) + .5)),
+            diamond = list(list(x=c(0, -.5, 0, .5), y=c(0, .5, 1, .5))),
+            triangle= list(list(x=c(0, -.56, .56),  y=c(0, 1, 1))))
+        }
+    else {
+        nc <- ncol(affected)
+        square <- polyfun(nc, list(x=c(-.5, -.5, .5, .5), y=c(-.5, .5, .5, -.5),
+                                    theta= -c(3,5,7,9)* pi/4))
+        circle <- circfun(nc)
+        diamond <-  polyfun(nc, list(x=c(0, -.5, 0, .5), y=c(-.5, 0, .5,0),
+                                    theta= -(1:4) *pi/2))
+        triangle <- polyfun(nc, list(x=c(-.56, .0, .56), y=c(-.5, .5, -.5),
+                                     theta=c(-2, -4, -6) *pi/3))
+        polylist <- list(square=square, circle=circle, diamond=diamond, 
+                         triangle=triangle)
+        }
+
+      drawbox<- function(x, y, sex, affected, status, col, polylist,
+                density, angle, boxw, boxh) {
+            for (i in 1:length(affected)) {
+                if (affected[i]==0) {
+                    polygon(x + (polylist[[sex]])[[i]]$x *boxw,
+                            y + (polylist[[sex]])[[i]]$y *boxh,
+                            col=NA, border=col)
+                    }
+                
+                if(affected[i]==1) {
+                  ## else {
+                  polygon(x + (polylist[[sex]])[[i]]$x * boxw,
+                          y + (polylist[[sex]])[[i]]$y * boxh,
+                          col=col, border=col, density=density[i], angle=angle[i])            
+                }
+                if(affected[i] == -1) {
+                  polygon(x + (polylist[[sex]])[[i]]$x * boxw,
+                          y + (polylist[[sex]])[[i]]$y * boxh,
+                          col=NA, border=col)
+                  
+                  midx <- x + mean(range(polylist[[sex]][[i]]$x*boxw))
+                  midy <- y + mean(range(polylist[[sex]][[i]]$y*boxh))
+                 
+                  points(midx, midy, pch="?", cex=min(1, cex*2/length(affected)))
+                }
+                
+              }
+            if (status==1) segments(x- .6*boxw, y+1.1*boxh, 
+                                    x+ .6*boxw, y- .1*boxh,)
+            ## Do a black slash per Beth, old line was
+            ##        x+ .6*boxw, y- .1*boxh, col=col)
+          }
+
+
+    sex <- as.numeric(x$sex)
+    for (i in 1:maxlev) {
+        for (j in 1:plist$n[i]) {
+            k <- plist$nid[i,j]
+            drawbox(plist$pos[i,j], i, sex[k], affected[k,],
+                    status[k], col[k], polylist, density, angle,
+                    boxw, boxh)
+            text(plist$pos[i,j], i + boxh + labh*.7, id[k], cex=cex, adj=c(.5,1))
+            }
+    }
+    maxcol <- ncol(plist$nid)  #all have the same size
     for(i in 1:maxlev) {
-	# between spouses
-	if(any(plist$spouse[i,  ]>0)) {
-	    temp <- (1:ncol(plist$spouse))[plist$spouse[i,  ]>0]
-	    segments(plist$pos[i, temp] + radius, rep( - i, length(temp)), 
-		     plist$pos[i, temp + 1] - radius, rep(-i, length(temp)))
-            # to be added -- double segment for plist$spouse==2
-	}
+        tempy <- i + boxh/2
+        if(any(plist$spouse[i,  ]>0)) {
+            temp <- (1:maxcol)[plist$spouse[i,  ]>0]
+            segments(plist$pos[i, temp] + boxw/2, rep(tempy, length(temp)), 
+                     plist$pos[i, temp + 1] - boxw/2, rep(tempy, length(temp)))
+
+            temp <- (1:maxcol)[plist$spouse[i,  ] ==2]
+            if (length(temp)) { #double line for double marriage
+                tempy <- tempy + boxh/10
+                segments(plist$pos[i, temp] + boxw/2, rep(tempy, length(temp)), 
+                       plist$pos[i, temp + 1] - boxw/2, rep(tempy, length(temp)))
+                }
+        }
     }
     for(i in 2:maxlev) {
+        zed <- unique(plist$fam[i,  ])
+        zed <- zed[zed > 0]  #list of family ids
+        
+        for(fam in zed) {
+            xx <- plist$pos[i - 1, fam + 0:1]
+            parentx <- mean(xx)   #midpoint of parents
 
-	# Children to parents, and across sibs
-	zed <- unique(plist$fam[i,  ])
-	zed <- zed[zed > 0]
 
-	for(fam in zed) {
-	    xx <- plist$pos[i - 1, fam + 0:1]
-	    parentx <- mean(xx)
-	    # Draw uplines from each subject
-            if(!is.null(plist$twins)){
-            tw.left <- (plist$twins[i, ] > 0 & plist$twins[i, ] < 4) & plist$fam[i,]==fam
-            mz.left <- (plist$twins[i, ] == 1) & plist$fam[i,]==fam
+            # Draw the uplines
+            who <- (plist$fam[i,] == fam) #The kids of interest
+            if (is.null(plist$twins)) target <- plist$pos[i,who]
+            else {
+                twin.to.left <-(c(0, plist$twins[i,who])[1:sum(who)])
+                temp <- cumsum(twin.to.left ==0) #increment if no twin to the left
+                # 5 sibs, middle 3 are triplets gives 1,2,2,2,3
+                # twin, twin, singleton gives 1,1,2,2,3
+                tcount <- table(temp)
+                target <- rep(tapply(plist$pos[i,who], temp, mean), tcount)
+                }
+            yy <- rep(i, sum(who))
+            segments(plist$pos[i,who], yy, target, yy-legh)
+                      
+            ## draw midpoint MZ twin line
+            if (any(plist$twins[i,who] ==1)) {
+              who2 <- which(plist$twins[i,who] ==1)
+              temp1 <- (plist$pos[i, who][who2] + target[who2])/2
+              temp2 <- (plist$pos[i, who][who2+1] + target[who2])/2
+                yy <- rep(i, length(who2)) - legh/2
+                segments(temp1, yy, temp2, yy)
+                }
 
-            un.left <- (plist$twins[i, ] == 3) & plist$fam[i,]==fam
-
-            ## figure out twins IN FAMILY (find next person in family)
-            tw.right <- rep(F,length(tw.left))
-            famlst <- plist$fam[i,] 
-            twloc <- (1:length(tw.right))[tw.left]
-            famloc <- (1:length(tw.right))[famlst==fam]
-            flag <- NULL
-            for(j in twloc) flag <- c(flag,min(famloc[j<famloc]))
-            tw.right[flag] <- T
-
-            mz.right <- rep(F,length(mz.left))
-            mzloc <- (1:length(mz.right))[mz.left]
-            flag <- NULL
-            for(j in mzloc) flag <- c(flag,min(famloc[j<famloc]))
-            mz.right[flag] <- T
-
-            ## unknown zygosity of the twin (type=3)
-            un.right <- rep(F,length(un.left))
-            unloc <- (1:length(un.right))[un.left]
-            flag <- NULL
-            for(j in unloc) flag <- c(flag,min(famloc[j<famloc]))
-            un.right[flag] <- T
-
-          }
+            # Add a question mark for those of unknown zygosity
+            if (any(plist$twins[i,who] ==3)) {
+              who2 <- which(plist$twins[i,who] ==3)
+              temp1 <- (plist$pos[i, who][who2] + target[who2])/2
+              temp2 <- (plist$pos[i, who][who2+1] + target[who2])/2
+                yy <- rep(i, length(who2)) - legh/2
+                text((temp1+temp2)/2, yy, '?')
+                }
             
-            if(is.null(plist$twins)){
-              twn <- length(plist$fam[i,]==fam)
-              tw.left <- rep(F,twn)
-              tw.right <- rep(F,twn)
-              mz.left <- rep(F,twn)
-              mz.right <- rep(F,twn)
+            # Add the horizontal line 
+            segments(min(target), i-legh, max(target), i-legh)
 
-              un.left <- rep(F,twn)
-              un.right <- rep(F,twn)
-}
+            # Draw line to parents
+            x1 <- mean(range(target))
+            y1 <- i-legh
+            if(branch == 0)
+                segments(x1, y1, parentx, (i-1) + boxh/2)
+            else {
+                y2 <- (i-1) + boxh/2
+                x2 <- parentx
+                ydelta <- ((y2 - y1) * branch)/2
+                segments(c(x1, x1, x2), c(y1, y1 + ydelta, y2 - ydelta), 
+                         c(x1, x2, x2), c(y1 + ydelta, y2 - ydelta, y2))
+                }
+            }
+        }
+    arcconnect <- function(x, y) {
+        xx <- seq(x[1], x[2], length = 15)
+        yy <- seq(y[1], y[2], length = 15) + (seq(-7, 7))^2/98 - .5
+        lines(xx, yy, lty = 2)
+        }
 
-            tw <- tw.left|tw.right
-            mz <- mz.left|mz.right          
-            un <- un.left|un.right          
-	    who <- (plist$fam[i,  ] == fam) & !tw
-
-	    xx <- plist$pos[i, who]
-	    yy <- rep( - i, length = sum(who))
-	    ww <- plist$nid[i, who]
-
-            xx.l <- plist$pos[i, tw.left]
-            yy.l <- rep( - i, length = sum(tw.left))
-	    ww.l <- plist$nid[i, tw.left]
-
-            xx.r <- plist$pos[i, tw.right]
-            yy.r <- rep( - i, length = sum(tw.right))
-	    ww.r <- plist$nid[i, tw.right]
-            
-            segments(xx, yy + (1/adj) * radius, xx, yy + 3 * delta, col
-		     = col[ww])
-
-            #####################################################
-            # draw diag line for twins
-             ## left side of twin
-	    segments(xx.l, yy.l + (1/adj) * radius, .5*(xx.l+xx.r), yy.l + 3 * delta, 
-		     col = col[ww.l])
-
-             ## right side of twin
-	    segments(xx.r, yy.r + (1/adj) * radius, .5*(xx.l+xx.r), yy.r + 3 * delta, 
-		     col = col[ww.r])
-
-             ## draw midpoint MZ twin line
-
-            xx.lm <- plist$pos[i, mz.left]
-            yy.lm <- rep( - i, length = sum(mz.left))
-
-            xx.rm <- plist$pos[i, mz.right]
-            yy.rm <- rep( - i, length = sum(mz.right))
-
-            segments(.5*(xx.lm+.5*(xx.rm+xx.lm)),
-                     .5*(yy.lm+(1/adj)*radius + yy.lm+3*delta),
-                     .5*(xx.rm+.5*(xx.rm+xx.lm)),
-                     .5*(yy.rm+(1/adj)*radius + yy.lm+3*delta))
-            
-             ## add question mark for unknown zygosity
-
-            xx.lu <- plist$pos[i, un.left]
-            yy.lu <- rep( - i, length = sum(un.left))
-
-            xx.ru <- plist$pos[i, un.right]
-            yy.ru <- rep( - i, length = sum(un.right))
-
-            ## text('?',.5*(xx.lu+.5*(xx.ru+xx.lu)),
-            ##      .5*(yy.lu+(1/adj)*radius + yy.lu+3*delta), cex=adj*.3)
-                    
-            #####################################################
-
-            
-	    who <- (plist$fam[i,  ] == fam) 
-	    xx <- plist$pos[i, who]
-	    yy <- rep( - i, length = sum(who))
-	    ww <- plist$nid[i, who]
-
-            # add connector
-	    xx2 <- plist$pos[i,]
-            xx2 <- xx2[who]
-
-            ## check to see if twins on either end of family
-            if(sum(tw)>=2){
-              tw.who <- tw[who]
-              n <- length(tw.who)
-              n2 <- sum(tw.who)
-              flagL <- sum(tw.who[1:2]) == 2
-              flagR <- sum(tw.who[c(n,n-1)]) == 2
-              xx2.save <- xx2
-
-              if(flagL) xx2[tw.who][1:2] <- rep(mean(xx2.save[tw.who][1:2]),2)
-              if(flagR) xx2[tw.who][c(n2,n2-1)] <- rep(mean(xx2.save[tw.who][c(n2,n2-1)]),2)
-              }                                   
-           
-	    segments(min(xx2), 3 * delta - i, max(xx2), 3 * delta - i)	
-            
-  	    # Draw line to parents
-	    x1 <- mean(range(xx))
-	    y1 <- 3 * delta - i
-
-	    if(branch == 0)
-	      segments(x1, y1, parentx,  - (i - 1))
-	    else {
-		y2 <- 1 - i
-		x2 <- parentx
-		ydelta <- ((y2 - y1) * branch)/2
-		segments(c(x1, x1, x2), c(y1, y1 + ydelta, y2 - ydelta), 
-			 c(x1, x2, x2), c(y1 + ydelta, y2 - ydelta, y2))
-	    }
-
-
-
-          }
-    }
-
-    # Connect up remote spouses
-    arcconnect <- function(x, y)
-      {
-        # draw an approx arc whose midpoint is 1/2 unit higher than its chord, 
-	#  with x[1], y[1], and x[2], y[2] as the ends of the chord
-	  xx <- seq(x[1], x[2], length = 15)
-	  yy <- seq(y[1], y[2], length = 15) + 0.5 - (seq(-7, 7))^2/98
-	  lines(xx, yy, lty = 2)
-      }
-
-    xx <- table(np)
-    xx <- xx[xx > 1]	
-
-    #those who appear multiple times
-    if(length(xx) > 0) {
-	multi <- as.numeric(names(xx))
-	for(i in 1:length(xx)) {
-	    x2 <- xp[np == multi[i]]
-	    y2 <- yp[np == multi[i]]
-	    nn <- xx[i]
-	    for(j in 1:(nn - 1))
-	      arcconnect(x2[j + 0:1], y2[j + 0:1])
-	}
-    }
-
-    ### print message if not plotting everyone
-
+    uid <- unique(plist$nid)
+    for (id in uid[uid>0]) {
+        indx <- which(plist$nid == id)
+        if (length(indx) >1) {   #subject is a multiple
+            tx <- plist$pos[indx]
+            ty <- ((row(plist$pos))[indx])[order(tx)]
+            tx <- sort(tx)
+            for (j in 1:(length(indx) -1))
+                arcconnect(tx[j + 0:1], ty[j+  0:1])
+            }
+        }
     ckall <- x$id[is.na(match(x$id,x$id[plist$nid]))]
     if(length(ckall>0)) cat('Did not plot the following people:',ckall,'\n')
-    
+        
     if(!keep.par) par(oldpar)
 
-    ## reorder xp and yp so that they are in the same order as plist
-    tmp <- plist$nid[plist$nid!=0]
-    xp2 <- xp[order(tmp)]
-    yp2 <- yp[order(tmp)]
-
-    invisible(list(plist=plist,object=x,x=xp2,y=yp2,textoff=textoff,
-                   symbolsize=symbolsize))
-}
+    tmp <- match(1:length(x$id), plist$nid)
+    invisible(list(plist=plist, x=plist$pos[tmp], y= row(plist$pos)[tmp],
+                   boxw=boxw, boxh=boxh, call=Call))        
+    }

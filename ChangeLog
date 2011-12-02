@@ -1,3 +1,5 @@
+02/12/2011 new plot.pedigree function with x,y in order of individuals in the input
+	   replace print with packageStartupMessage() in .onLoad
 06/06/2011 hook up kinship.pdf and releasep.pdf
 25/08/2009 replace \ldots with \dots in function arguments of coxme, plot.pedigree,
 	   solve.bdsmatrix/solve.gchol/solve.gchol.bdsmatrix
