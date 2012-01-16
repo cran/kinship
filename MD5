@@ -1,10 +1,10 @@
-bd8cdd346a6c03ab32b3bfdb187355cd *ChangeLog
-f0dad32416957895052ba7dd3aa18ef2 *DESCRIPTION
+6d4dd468204073d86abb09b8c69937fa *ChangeLog
+cda49a32c9f91f1cc6b28489cb989db2 *DESCRIPTION
 df8483130c94ceaa198c7befbf135504 *INDEX
 02af116fd40c6b10cba0540458512099 *NAMESPACE
 4e77cb291efc85f58c6a77b806de5d6a *R/AAA.R
 f7c3c14161fa03fc5f8b1d63c69377b2 *R/BDSmatrix.R
-a403b6c81c3d05c0606e57ed5306894b *R/BDSmatrix_%_%.R
+7d996e5ac1f49146416351ec330e49d8 *R/BDSmatrix_%_%.R
 75a59844039ed2066cf4cc321f32d6bf *R/align.pedigree.R
 3fb97e23e8956fa30f5674943de42311 *R/alignped1.R
 3be1d2bac659a3bc5cfb16aeced198bb *R/alignped2.R
@@ -25,7 +25,7 @@ db0888618579cebbc1dbca52bc5cdcfb *R/coxme.fit.R
 cfe03c87113ddc6246d6e6623b630220 *R/coxph.wtest.R
 bad1c2eef3840b38a2d2cf98b89ced8e *R/diag.bdsmatrix.R
 9fbdafdda33d7f22182d4e1437e76464 *R/familycheck.R
-5203876f3832f8d16866ea6cc3de6737 *R/gchol.R
+3beb3546acd23afb7654053714bc0af2 *R/gchol.R
 3ddfdae1a669d087911d4fd7e15320e6 *R/gchol.bdsmatrix.R
 d642bbcbb911ae9aa8aff62b6ff95291 *R/getCovariateFormula2.R
 9ea434ba9b675d7d41790f74cf993e6d *R/getCrossedTerms.R
@@ -43,10 +43,10 @@ a540a0f74d7c110098d323319ad23133 *R/print.coxme.R
 9d7cbf52111688c7e7ea8a9b5ba5e93f *R/solve.gchol.R
 91aab7ce329f8b2dfccde1f7b7da2000 *R/solve.gchol.bdsmatrix.R
 23982cb268cc8761ecbc53a47aade9ad *R/strata2.R
-b923fefd4466e5f1f7cb5517a852f51a *inst/doc/current.pdf
+58aff4b819f18fa703fd3e32be78ba0f *inst/doc/current.pdf
 7721e7f2ff07b1683d7b320e356a9426 *inst/doc/kinship.Rnw
-cfc928670ebd69f0617652eb03fbddf3 *inst/doc/kinship.pdf
-0ccb786fe1c7ffa5991c1246f5049e49 *inst/doc/releasep.pdf
+374257a7b93e742263dce69446e622e9 *inst/doc/kinship.pdf
+2cdb63836005d379fd0e08ccb20ac355 *inst/doc/releasep.pdf
 c7b68bd2be7bc033d910e87c8a70e327 *inst/tests/plot.pedigree.R
 31e9b2ad2ff8068bbb5dd9e47f341379 *inst/tests/plot.pedigree.Rd
 1ddf349681595f98c470ba6449574033 *inst/tests/test/Readme

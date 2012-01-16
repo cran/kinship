@@ -1,3 +1,4 @@
+16/01/2012 revise for an error reported by Prof Brian Ripley
 02/12/2011 new plot.pedigree function with x,y in order of individuals in the input
 	   replace print with packageStartupMessage() in .onLoad
 06/06/2011 hook up kinship.pdf and releasep.pdf

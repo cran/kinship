@@ -5,7 +5,7 @@
 # Both S3 and S4 work
 #'%*%' <- function(x,y) UseMethod('%*%') 
 #'%*%.default' <- base::"%*%" #function(x,y) get("%*%",NULL)(x,y)
-'%*%' <- setGeneric("%*%")
+#setGeneric("%*%")
 
 '%*%.bdsmatrix' <- function(x, y) {
     if (!inherits(x, 'bdsmatrix'))

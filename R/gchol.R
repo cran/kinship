@@ -50,4 +50,4 @@ setMethod('diag', signature(x='gchol'),
 	x@.Data[ seq(1, length=d, by=d+1)]
 	})
 
-setMethod('show', 'gchol', function(object) show(as.matrix(object, 'matrix')))
+setMethod('show', 'gchol', function(object) show(as.matrix(object, FALSE)))
