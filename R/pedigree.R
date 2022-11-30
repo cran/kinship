@@ -3,7 +3,7 @@ pedigree <- function(id, dadid, momid, sex, affected, status, relations) {
     # Do some data checks
     n <- length(id)
     if (length(momid) != n) stop("Mismatched lengths, id and momid")
-    if (length(dadid) != n) stop("Mismatched lengths, id and momid")
+    if (length(dadid) != n) stop("Mismatched lengths, id and dadid")
     if (length(sex  ) != n) stop("Mismatched lengths, id and sex")
 
     # Don't allow missing id values
